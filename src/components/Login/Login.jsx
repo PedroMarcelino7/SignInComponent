@@ -16,7 +16,7 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import GoogleIcon from '../Icons/GoogleIcon';
+import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 
 function ColorSchemeToggle(props) {
