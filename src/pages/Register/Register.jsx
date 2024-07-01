@@ -43,7 +43,7 @@ function ColorSchemeToggle(props) {
     );
 }
 
-const Login = ({ company }) => {
+const Register = ({ company }) => {
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
             <CssBaseline />
@@ -126,7 +126,7 @@ const Login = ({ company }) => {
                                 </Typography>
                                 <Typography level="body-sm">
                                     New to {company}?{' '}
-                                    <Link href={<Register />} level="title-sm">
+                                    <Link href="#replace-with-a-link" level="title-sm">
                                         Sign up!
                                     </Link>
                                 </Typography>
@@ -224,4 +224,4 @@ const Login = ({ company }) => {
     )
 }
 
-export default Login
+export default Register
