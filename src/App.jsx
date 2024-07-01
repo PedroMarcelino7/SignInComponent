@@ -1,16 +1,16 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Login from './components/Login'
-import Register from './components/Register'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login company="Your Company" />} />
+        <Route path="/" element={<Login company="Pedro Marcelino" />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
 export default App;

@@ -126,7 +126,7 @@ const Login = ({ company }) => {
                                 </Typography>
                                 <Typography level="body-sm">
                                     New to {company}?{' '}
-                                    <Link href={<Register />} level="title-sm">
+                                    <Link href='' level="title-sm">
                                         Sign up!
                                     </Link>
                                 </Typography>
