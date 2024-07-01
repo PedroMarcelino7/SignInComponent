@@ -1,8 +1,8 @@
-import Login from './components/Login/Login';
+import Login from './pages/Login/Login';
 
 function App() {
   return (
-    <Login />
+    <Login company={'Pedro Marcelino'} />
   )
 }
 

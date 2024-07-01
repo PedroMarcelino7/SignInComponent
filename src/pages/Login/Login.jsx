@@ -43,7 +43,7 @@ function ColorSchemeToggle(props) {
     );
 }
 
-const Login = () => {
+const Login = ({ company }) => {
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
             <CssBaseline />
@@ -51,7 +51,7 @@ const Login = () => {
                 styles={{
                     ':root': {
                         '--Form-maxWidth': '800px',
-                        '--Transition-duration': '0.4s', // set to `none` to disable transition
+                        '--Transition-duration': '0.5s',
                     },
                 }}
             />
@@ -65,7 +65,7 @@ const Login = () => {
                     display: 'flex',
                     justifyContent: 'flex-end',
                     backdropFilter: 'blur(12px)',
-                    backgroundColor: 'rgba(255 255 255 / 0.2)',
+                    backgroundColor: 'rgba(200 200 200 / 0.4)',
                     [theme.getColorSchemeSelector('dark')]: {
                         backgroundColor: 'rgba(19 19 24 / 0.4)',
                     },
@@ -92,7 +92,7 @@ const Login = () => {
                             <IconButton variant="soft" color="primary" size="sm">
                                 <BadgeRoundedIcon />
                             </IconButton>
-                            <Typography level="title-lg">Company logo</Typography>
+                            <Typography level="title-lg">{company}</Typography>
                         </Box>
                         <ColorSchemeToggle />
                     </Box>
@@ -125,7 +125,7 @@ const Login = () => {
                                     Sign in
                                 </Typography>
                                 <Typography level="body-sm">
-                                    New to company?{' '}
+                                    New to {company}?{' '}
                                     <Link href="#replace-with-a-link" level="title-sm">
                                         Sign up!
                                     </Link>
@@ -192,7 +192,7 @@ const Login = () => {
                     </Box>
                     <Box component="footer" sx={{ py: 3 }}>
                         <Typography level="body-xs" textAlign="center">
-                            © Your company {new Date().getFullYear()}
+                            © {company} {new Date().getFullYear()}
                         </Typography>
                     </Box>
                 </Box>
