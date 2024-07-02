@@ -52,8 +52,18 @@ const Register = ({ company }) => {
         document.title = `Register - ${company}`;
     }, []);
 
-    const responseGoogle = (response) => {
-        console.log(response)
+    const handleSubmit = (data) => {
+        const { email, password, confirmPassword } = data
+
+        if(email == '' || email == null){
+            alert('email obrigatorio')
+        }
+        if(password == '' || password == null){
+            alert('password obrigatorio')
+        }
+        if(confirmPassword == '' || confirmPassword == null){
+            alert('confirmPassword obrigatorio')
+        }
     }
 
     return (
@@ -190,9 +200,10 @@ const Register = ({ company }) => {
                                     const data = {
                                         email: formElements.email.value,
                                         password: formElements.password.value,
-                                        persistent: formElements.persistent.checked,
+                                        confirmPassword: formElements.confirmPassword.value
                                     };
-                                    alert(JSON.stringify(data, null, 2));
+
+                                    handleSubmit(data)
                                 }}
                             >
                                 <FormControl required>
