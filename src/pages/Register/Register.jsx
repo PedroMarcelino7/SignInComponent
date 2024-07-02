@@ -4,9 +4,6 @@ import { useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -50,37 +47,47 @@ function ColorSchemeToggle(props) {
     );
 }
 
-const validationSchema = yup.object({
-    email: yup
-        .string('Enter your email')
-        .email('Enter a valid email')
-        .required('Email is required'),
-    password: yup
-        .string('Enter your password')
-        .min(8, 'Password should be of minimum 8 characters length')
-        .required('Password is required'),
-    confirmPassword: yup
-        .string('Confirm your password')
-        .oneOf([yup.ref('password'), null], 'Passwords must match')
-        .required('Confirm Password is required'),
-});
-
 const Register = ({ company }) => {
     useEffect(() => {
         document.title = `Register - ${company}`;
     }, []);
 
-    const handleSubmit = (data) => {
-        const { email, password, confirmPassword } = data
+    const handleSubmit = async (data) => {
+        const { email, password, confirmPassword } = data;
 
-        if (email == '' || email == null) {
-            alert('email obrigatorio')
+        if (!email || email.length < 5 || email.length > 50) {
+            alert('Invalid email');
+            return;
         }
-        if (password == '' || password == null) {
-            alert('password obrigatorio')
+
+        if (!password) {
+            alert('Invalid password');
+            return;
         }
-        if (confirmPassword == '' || confirmPassword == null) {
-            alert('confirmPassword obrigatorio')
+
+        try {
+            const response = await fetch('http://localhost:3001/users/post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: email,
+                    userPassword: password,
+                    userConfirmPassword: confirmPassword
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            console.log('Success:', result);
+            alert('Usuário registrado com sucesso!');
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Erro ao registrar usuário.');
         }
     }
 
