@@ -1,4 +1,5 @@
 import * as React from 'react';
+import GoogleLogin from 'react-google-login';
 import { useEffect } from 'react';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -48,6 +49,10 @@ const Login = ({ company }) => {
     useEffect(() => {
         document.title = `Login - ${company}`;
     }, []);
+
+    const responseGoogle = (response) => {
+        console.log(response)
+    }
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -142,7 +147,12 @@ const Login = ({ company }) => {
                                 fullWidth
                                 startDecorator={<GoogleIcon />}
                             >
-                                Continue with Google
+                                <GoogleLogin
+                                    clientId='279059219026-j5vltgtijlfgvm4v1qelqjrg4jh2f2qu.apps.googleusercontent.com'
+                                    buttonText='Continue with Google'
+                                    onSuccess={responseGoogle}
+                                    onFailure={responseGoogle}
+                                />
                             </Button>
                         </Stack>
                         <Divider

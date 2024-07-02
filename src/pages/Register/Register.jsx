@@ -50,7 +50,7 @@ const Register = ({ company }) => {
     }, []);
 
     const responseGoogle = (response) => {
-        return;
+        console.log(response)
     }
 
     return (
@@ -146,7 +146,7 @@ const Register = ({ company }) => {
                                 fullWidth
                                 startDecorator={<GoogleIcon />}
                             >
-                                <GoogleLogin 
+                                <GoogleLogin
                                     clientId='279059219026-j5vltgtijlfgvm4v1qelqjrg4jh2f2qu.apps.googleusercontent.com'
                                     buttonText='Continue with Google'
                                     onSuccess={responseGoogle}
