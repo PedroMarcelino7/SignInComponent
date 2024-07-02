@@ -21,6 +21,9 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 
@@ -52,6 +55,9 @@ const Login = ({ company }) => {
     useEffect(() => {
         document.title = `Login - ${company}`;
     }, [company]);
+
+    const [showPassword, setShowPassword] = React.useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -194,11 +200,26 @@ const Login = ({ company }) => {
                             >
                                 <FormControl required>
                                     <FormLabel>Email</FormLabel>
-                                    <Input type="email" name="email" />
+                                    <Input
+                                        type="email"
+                                        name="email"
+                                        autoComplete='email'
+                                    />
                                 </FormControl>
                                 <FormControl required>
                                     <FormLabel>Password</FormLabel>
-                                    <Input type="password" name="password" />
+                                    <Input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        autoComplete='new-password'
+                                        endDecorator={
+                                            <IconButton
+                                                onClick={handleClickShowPassword}
+                                            >
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        }
+                                    />
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Box
