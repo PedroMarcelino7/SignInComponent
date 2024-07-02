@@ -20,6 +20,9 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 
@@ -55,8 +58,13 @@ const Register = ({ company }) => {
     const handleSubmit = async (data) => {
         const { email, password, confirmPassword } = data;
 
-        if (!email || email.length < 5 || email.length > 50) {
+        if (!email) {
             alert('Invalid email');
+            return;
+        }
+
+        if (email.length < 10 || email.length > 50) {
+            alert('Email length should be between 10 and 50');
             return;
         }
 
@@ -64,6 +72,13 @@ const Register = ({ company }) => {
             alert('Invalid password');
             return;
         }
+
+        if (password !== confirmPassword) {
+            alert('Password must match');
+            return;
+        }
+
+        //VALIDAR SENHA FORTE
 
         try {
             const response = await fetch('http://localhost:3001/users/post', {
@@ -90,6 +105,10 @@ const Register = ({ company }) => {
             alert('Erro ao registrar usuário.');
         }
     }
+
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -233,15 +252,41 @@ const Register = ({ company }) => {
                             >
                                 <FormControl required>
                                     <FormLabel>Email</FormLabel>
-                                    <Input type="email" name="email" />
+                                    <Input
+                                        type="email"
+                                        name="email"
+                                        autoComplete='email'
+                                    />
                                 </FormControl>
                                 <FormControl required>
                                     <FormLabel>Password</FormLabel>
-                                    <Input type="password" name="password" />
+                                    <Input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        autoComplete='new-password'
+                                        endDecorator={
+                                            <IconButton
+                                                onClick={handleClickShowPassword}
+                                            >
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        }
+                                    />
                                 </FormControl>
                                 <FormControl required>
                                     <FormLabel>Confirm Password</FormLabel>
-                                    <Input type="password" name="confirmPassword" />
+                                    <Input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="confirmPassword"
+                                        autoComplete='new-password'
+                                        endDecorator={
+                                            <IconButton
+                                                onClick={handleClickShowPassword}
+                                            >
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        }
+                                    />
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Button type="submit" fullWidth>
