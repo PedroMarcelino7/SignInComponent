@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { GoogleLogin } from '@react-oauth/google';
 import { useEffect } from 'react';
+
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -48,11 +51,7 @@ function ColorSchemeToggle(props) {
 const Login = ({ company }) => {
     useEffect(() => {
         document.title = `Login - ${company}`;
-    }, []);
-
-    const responseGoogle = (response) => {
-        console.log(response)
-    }
+    }, [company]);
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -147,14 +146,28 @@ const Login = ({ company }) => {
                                 fullWidth
                                 startDecorator={<GoogleIcon />}
                             >
-                                <GoogleLogin
-                                    onSuccess={credentialResponse => {
-                                        console.log(credentialResponse);
+                                Continue with Google
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        opacity: 0,
+                                        '& > div': { height: '100%' }
                                     }}
-                                    onError={() => {
-                                        console.log('Login Failed');
-                                    }}
-                                />;
+                                >
+                                    <GoogleLogin
+                                        onSuccess={(credentialResponse) => {
+                                            const decoded = jwtDecode(credentialResponse?.credential);
+                                            console.log(decoded);
+                                        }}
+                                        onError={() => {
+                                            console.log('Login Failed');
+                                        }}
+                                    />
+                                </Box>
                             </Button>
                         </Stack>
                         <Divider
