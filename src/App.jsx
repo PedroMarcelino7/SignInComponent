@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import GoogleLogin from 'react-google-login';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 
