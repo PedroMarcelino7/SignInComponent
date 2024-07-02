@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { GoogleLogin } from '@react-oauth/google';
 import { useEffect } from 'react';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -146,7 +147,14 @@ const Login = ({ company }) => {
                                 fullWidth
                                 startDecorator={<GoogleIcon />}
                             >
-                                Continue with Google
+                                <GoogleLogin
+                                    onSuccess={credentialResponse => {
+                                        console.log(credentialResponse);
+                                    }}
+                                    onError={() => {
+                                        console.log('Login Failed');
+                                    }}
+                                />;
                             </Button>
                         </Stack>
                         <Divider
