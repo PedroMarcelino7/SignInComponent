@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -44,6 +45,10 @@ function ColorSchemeToggle(props) {
 }
 
 const Login = ({ company }) => {
+    useEffect(() => {
+        document.title = `Login - ${company}`;
+    }, []);
+
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
             <CssBaseline />
