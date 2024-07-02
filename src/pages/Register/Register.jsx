@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -47,6 +50,21 @@ function ColorSchemeToggle(props) {
     );
 }
 
+const validationSchema = yup.object({
+    email: yup
+        .string('Enter your email')
+        .email('Enter a valid email')
+        .required('Email is required'),
+    password: yup
+        .string('Enter your password')
+        .min(8, 'Password should be of minimum 8 characters length')
+        .required('Password is required'),
+    confirmPassword: yup
+        .string('Confirm your password')
+        .oneOf([yup.ref('password'), null], 'Passwords must match')
+        .required('Confirm Password is required'),
+});
+
 const Register = ({ company }) => {
     useEffect(() => {
         document.title = `Register - ${company}`;
@@ -55,13 +73,13 @@ const Register = ({ company }) => {
     const handleSubmit = (data) => {
         const { email, password, confirmPassword } = data
 
-        if(email == '' || email == null){
+        if (email == '' || email == null) {
             alert('email obrigatorio')
         }
-        if(password == '' || password == null){
+        if (password == '' || password == null) {
             alert('password obrigatorio')
         }
-        if(confirmPassword == '' || confirmPassword == null){
+        if (confirmPassword == '' || confirmPassword == null) {
             alert('confirmPassword obrigatorio')
         }
     }
