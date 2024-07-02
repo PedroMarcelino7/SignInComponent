@@ -122,12 +122,12 @@ const Register = ({ company }) => {
                         <Stack gap={4} sx={{ mb: 2 }}>
                             <Stack gap={1}>
                                 <Typography component="h1" level="h3">
-                                    Sign in
+                                    Sign up
                                 </Typography>
                                 <Typography level="body-sm">
-                                    New to {company}?{' '}
-                                    <Link href="#replace-with-a-link" level="title-sm">
-                                        Sign up!
+                                    Already registered?{' '}
+                                    <Link href="/" level="title-sm">
+                                        Sign in!
                                     </Link>
                                 </Typography>
                             </Stack>
@@ -170,21 +170,13 @@ const Register = ({ company }) => {
                                     <FormLabel>Password</FormLabel>
                                     <Input type="password" name="password" />
                                 </FormControl>
+                                <FormControl required>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <Input type="password" name="confirmPassword" />
+                                </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Checkbox size="sm" label="Remember me" name="persistent" />
-                                        <Link level="title-sm" href="#replace-with-a-link">
-                                            Forgot your password?
-                                        </Link>
-                                    </Box>
                                     <Button type="submit" fullWidth>
-                                        Sign in
+                                        Sign up
                                     </Button>
                                 </Stack>
                             </form>
