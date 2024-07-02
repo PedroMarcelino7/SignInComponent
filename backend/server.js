@@ -14,6 +14,22 @@ app.get('/users', (req, res) => {
     });
 });
 
+app.post('/users/post', (req, res) => {
+    const { userEmail, userPassword } = req.body;
+    const query = `
+    INSERT INTO
+    USERS (USER_EMAIL, USER_PASSWORD)
+    VALUES (?, ?)`;
+    const values = [userEmail, userPassword];
+
+    connection.query(query, values, (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.status(201).json(results);
+    });
+});
+
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
