@@ -17,10 +17,11 @@ import Link from '@mui/joy/Link';
 import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
+import Alert from '@mui/joy/Alert';
+
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
@@ -55,6 +56,7 @@ const Register = ({ company }) => {
         document.title = `Register - ${company}`;
     }, []);
 
+    const [registered, setRegistered] = React.useState(false)
     const handleSubmit = async (data) => {
         const { email, password, confirmPassword } = data;
 
@@ -99,9 +101,10 @@ const Register = ({ company }) => {
 
             const result = await response.json();
             console.log('Success:', result);
-            alert('Usuário registrado com sucesso!');
+            setRegistered(true)
         } catch (error) {
             console.error('Error:', error);
+            // setRegistered(false)
             alert('Erro ao registrar usuário.');
         }
     }
@@ -218,6 +221,7 @@ const Register = ({ company }) => {
                             },
                         }}
                     >
+                        {registered && <Alert color="success">Successfully registered.</Alert>}
                         <Stack gap={4} sx={{ mb: 2 }}>
                             <Stack gap={1}>
                                 <Typography component="h1" level="h3">
