@@ -237,7 +237,7 @@ const Register = ({ company }) => {
                                 </Typography>
                                 <Typography level="body-sm">
                                     Already registered?{' '}
-                                    <Link href="/" level="title-sm">
+                                    <Link href="/login" level="title-sm">
                                         Sign in!
                                     </Link>
                                 </Typography>
