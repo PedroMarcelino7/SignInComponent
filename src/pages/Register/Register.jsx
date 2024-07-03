@@ -110,6 +110,7 @@ const Register = ({ company }) => {
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const [passwordWeakness, setPasswordWeakness] = React.useState(0)
+    const [password, setPassword] = React.useState('')
     const passwordValidation = (password) => {
         let weakness = 0;
 
@@ -134,7 +135,13 @@ const Register = ({ company }) => {
         }
 
         setPasswordWeakness(weakness);
+        setPassword(password)
     };
+
+    const [matchingPassword, setMatchingPassword] = React.useState(true)
+    const handleMatchingPassword = (confirmPassword) => {
+        confirmPassword == password ? setMatchingPassword(true) : setMatchingPassword(false)
+    }
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -303,7 +310,7 @@ const Register = ({ company }) => {
                                         <Typography
                                             color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
                                         >
-                                            {passwordWeakness < 20 ? 'Weak Password' : (passwordWeakness < 50 ? 'Medium Password' : 'Strong Password')}
+                                            {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
                                         </Typography>
                                     )}
                                 </FormControl>
@@ -313,6 +320,7 @@ const Register = ({ company }) => {
                                         type={showPassword ? 'text' : 'password'}
                                         name="confirmPassword"
                                         autoComplete='new-password'
+                                        onChange={(e) => handleMatchingPassword(e.target.value)}
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
@@ -321,6 +329,7 @@ const Register = ({ company }) => {
                                             </IconButton>
                                         }
                                     />
+                                    {!matchingPassword && <Typography>Password must match.</Typography>}
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Button type="submit" fullWidth>
