@@ -176,7 +176,7 @@ const Login = ({ company }) => {
                                 </Box>
                             </Button>
                         </Stack>
-                        <Divider
+                        <Divider 
                             sx={(theme) => ({
                                 [theme.getColorSchemeSelector('light')]: {
                                     color: { xs: '#FFF', md: 'text.tertiary' },

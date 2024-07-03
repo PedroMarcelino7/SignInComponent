@@ -109,6 +109,33 @@ const Register = ({ company }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
+    const passwordValidation = (password) => {
+        let weakness = 0;
+
+        if (password.length >= 16) {
+            weakness += 15;
+        }
+
+        if (/[!@#$%&*(){}\[\]/|:;,.+\-]/.test(password)) {
+            weakness += 15;
+        }
+
+        if (/[0-9]/.test(password)) {
+            weakness += 10;
+        }
+
+        if (/[A-Z]/.test(password)) {
+            weakness += 5;
+        }
+
+        if (/[a-z]/.test(password)) {
+            weakness += 5;
+        }
+
+        setPasswordWeakness(weakness);
+    };
+
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
             <CssBaseline />
@@ -263,6 +290,7 @@ const Register = ({ company }) => {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         autoComplete='new-password'
+                                        onChange={(e) => passwordValidation(e.target.value)}
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
@@ -271,6 +299,13 @@ const Register = ({ company }) => {
                                             </IconButton>
                                         }
                                     />
+                                    {passwordWeakness > 0 && (
+                                        <Typography
+                                            color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
+                                        >
+                                            {passwordWeakness < 20 ? 'Weak Password' : (passwordWeakness < 50 ? 'Medium Password' : 'Strong Password')}
+                                        </Typography>
+                                    )}
                                 </FormControl>
                                 <FormControl required>
                                     <FormLabel>Confirm Password</FormLabel>
