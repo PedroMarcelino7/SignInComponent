@@ -59,6 +59,35 @@ const Login = ({ company }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
+    const [password, setPassword] = React.useState('')
+    const passwordValidation = (password) => {
+        let weakness = 0;
+
+        if (password.length >= 16) {
+            weakness += 15;
+        }
+
+        if (/[!@#$%&*(){}\[\]/|:;,.+\-]/.test(password)) {
+            weakness += 15;
+        }
+
+        if (/[0-9]/.test(password)) {
+            weakness += 10;
+        }
+
+        if (/[A-Z]/.test(password)) {
+            weakness += 5;
+        }
+
+        if (/[a-z]/.test(password)) {
+            weakness += 5;
+        }
+
+        setPasswordWeakness(weakness);
+        setPassword(password)
+    };
+
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
             <CssBaseline />
@@ -176,7 +205,7 @@ const Login = ({ company }) => {
                                 </Box>
                             </Button>
                         </Stack>
-                        <Divider 
+                        <Divider
                             sx={(theme) => ({
                                 [theme.getColorSchemeSelector('light')]: {
                                     color: { xs: '#FFF', md: 'text.tertiary' },
@@ -212,6 +241,7 @@ const Login = ({ company }) => {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         autoComplete='new-password'
+                                        onChange={(e) => passwordValidation(e.target.value)}
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
@@ -220,6 +250,13 @@ const Login = ({ company }) => {
                                             </IconButton>
                                         }
                                     />
+                                    {passwordWeakness > 0 && (
+                                        <Typography
+                                            color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
+                                        >
+                                            {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
+                                        </Typography>
+                                    )}
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Box
