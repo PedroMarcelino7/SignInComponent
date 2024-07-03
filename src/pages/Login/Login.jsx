@@ -59,34 +59,33 @@ const Login = ({ company }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
     const [password, setPassword] = React.useState('')
-    const passwordValidation = (password) => {
-        let weakness = 0;
+    const handleSubmit = async (data) => {
+        const { email, password } = data;
 
-        if (password.length >= 16) {
-            weakness += 15;
+        try {
+            const response = await fetch('http://localhost:3001/users/get', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: email,
+                    userPassword: password
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            console.log('Success:', result);
+        } catch (error) {
+            console.error('Error:', error);
         }
-
-        if (/[!@#$%&*(){}\[\]/|:;,.+\-]/.test(password)) {
-            weakness += 15;
-        }
-
-        if (/[0-9]/.test(password)) {
-            weakness += 10;
-        }
-
-        if (/[A-Z]/.test(password)) {
-            weakness += 5;
-        }
-
-        if (/[a-z]/.test(password)) {
-            weakness += 5;
-        }
-
-        setPasswordWeakness(weakness);
-        setPassword(password)
-    };
+    }
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -221,10 +220,10 @@ const Login = ({ company }) => {
                                     const formElements = event.currentTarget.elements;
                                     const data = {
                                         email: formElements.email.value,
-                                        password: formElements.password.value,
-                                        persistent: formElements.persistent.checked,
+                                        password: formElements.password.value
                                     };
-                                    alert(JSON.stringify(data, null, 2));
+
+                                    handleSubmit(data)
                                 }}
                             >
                                 <FormControl required>
@@ -241,7 +240,6 @@ const Login = ({ company }) => {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         autoComplete='new-password'
-                                        onChange={(e) => passwordValidation(e.target.value)}
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
@@ -251,13 +249,6 @@ const Login = ({ company }) => {
                                             </IconButton>
                                         }
                                     />
-                                    {passwordWeakness > 0 && (
-                                        <Typography
-                                            color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
-                                        >
-                                            {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
-                                        </Typography>
-                                    )}
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Box
