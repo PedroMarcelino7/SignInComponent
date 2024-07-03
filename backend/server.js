@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 import { connection } from './db.js';
 
 const app = express();
+const SECRET_KEY = 'logged';
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -38,26 +40,27 @@ app.post('/users/post', (req, res) => {
 
 app.post('/users/get', (req, res) => {
     const { userEmail, userPassword } = req.body;
-    const query = `
-    SELECT USER_EMAIL, USER_PASSWORD 
-    FROM USERS 
-    WHERE USER_EMAIL = ?`;
+    const query = `SELECT USER_EMAIL, USER_PASSWORD FROM USERS WHERE USER_EMAIL = ?`;
     const values = [userEmail];
 
-    connection.query(query, values, (err, results) => {
+    connection.query(query, values, async (err, results) => {
         if (err) {
             return res.status(500).send(err);
         }
 
-        if (results.length === 0) {
-            return res.status(401).json({ message: 'Invalid email.' });
-        }
+        if (results.length > 0) {
+            const user = results[0];
+            const passwordMatch = await bcrypt.compare(userPassword, user.USER_PASSWORD);
 
-        if (results[0].USER_PASSWORD !== userPassword) {
-            return res.status(401).json({ message: 'Invalid password.' });
+            if (passwordMatch) {
+                const token = jwt.sign({ email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
+                res.status(200).json({ token });
+            } else {
+                res.status(401).send('Invalid credentials');
+            }
+        } else {
+            res.status(404).send('User not found');
         }
-
-        res.status(200).json({ message: 'Login successful' });
     });
 });
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
@@ -59,7 +60,8 @@ const Login = ({ company }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const [password, setPassword] = React.useState('')
+    const navigate = useNavigate();
+
     const handleSubmit = async (data) => {
         const { email, password } = data;
 
@@ -81,7 +83,9 @@ const Login = ({ company }) => {
 
             const result = await response.json();
 
-            console.log('Success:', result);
+            localStorage.setItem('authToken', result.token);
+
+            navigate('/');
         } catch (error) {
             console.error('Error:', error);
         }
