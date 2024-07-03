@@ -56,7 +56,7 @@ const Register = ({ company }) => {
         document.title = `Register - ${company}`;
     }, []);
 
-    const [registered, setRegistered] = React.useState(false)
+    const [registered, setRegistered] = React.useState('')
     const handleSubmit = async (data) => {
         const { email, password, confirmPassword } = data;
 
@@ -100,12 +100,20 @@ const Register = ({ company }) => {
             }
 
             const result = await response.json();
+
             console.log('Success:', result);
-            setRegistered(true)
+
+            setRegistered('success')
+            setTimeout(() => {
+                setRegistered('')
+            }, 5000)
         } catch (error) {
             console.error('Error:', error);
-            // setRegistered(false)
-            alert('Erro ao registrar usuário.');
+
+            setRegistered('error')
+            setTimeout(() => {
+                setRegistered('')
+            }, 5000)
         }
     }
 
@@ -221,7 +229,7 @@ const Register = ({ company }) => {
                             },
                         }}
                     >
-                        {registered && <Alert color="success">Successfully registered.</Alert>}
+                        {registered == 'success' ? <Alert color="success">Successfully registered.</Alert> : (registered == 'error' && <Alert color="danger">User registration error.</Alert>)}
                         <Stack gap={4} sx={{ mb: 2 }}>
                             <Stack gap={1}>
                                 <Typography component="h1" level="h3">
