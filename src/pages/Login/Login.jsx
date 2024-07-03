@@ -245,6 +245,7 @@ const Login = ({ company }) => {
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
+                                                tabIndex={-1}
                                             >
                                                 {showPassword ? <Visibility /> : <VisibilityOff />}
                                             </IconButton>

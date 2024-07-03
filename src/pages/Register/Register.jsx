@@ -301,6 +301,7 @@ const Register = ({ company }) => {
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
+                                                tabIndex={-1}
                                             >
                                                 {showPassword ? <Visibility /> : <VisibilityOff />}
                                             </IconButton>
@@ -324,6 +325,7 @@ const Register = ({ company }) => {
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
+                                                tabIndex={-1}
                                             >
                                                 {showPassword ? <Visibility /> : <VisibilityOff />}
                                             </IconButton>
