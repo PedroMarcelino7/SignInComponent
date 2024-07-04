@@ -64,6 +64,7 @@ const Login = ({ company }) => {
 
     const handleSubmit = async (data) => {
         const { email, password } = data;
+        console.log('Dados do formulário:', email, password);
 
         try {
             const response = await fetch('http://localhost:3001/users/get', {

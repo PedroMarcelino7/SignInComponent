@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import { connection } from './db.js';
 
 const app = express();
@@ -41,6 +40,7 @@ app.post('/users/post', (req, res) => {
 
 app.post('/users/get', (req, res) => {
     const { userEmail, userPassword } = req.body;
+    console.log('Dados recebidos:', userEmail, userPassword);
     const query = `SELECT USER_EMAIL, USER_PASSWORD FROM USERS WHERE USER_EMAIL = ?`;
     const values = [userEmail];
 
@@ -51,11 +51,10 @@ app.post('/users/get', (req, res) => {
 
         if (results.length > 0) {
             const user = results[0];
-            const passwordMatch = await bcrypt.compare(userPassword, user.USER_PASSWORD);
 
-            if (passwordMatch) {
+            if (userPassword == user.USER_PASSWORD) {
                 const token = jwt.sign({ email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
-                res.status(200).json({ token });
+                res.status(200).send({ token });
             } else {
                 res.status(401).send('Invalid credentials');
             }
