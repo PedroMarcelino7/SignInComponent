@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
@@ -56,7 +57,10 @@ const Register = ({ company }) => {
         document.title = `Register - ${company}`;
     }, []);
 
+    const navigate = useNavigate();
+
     const [registered, setRegistered] = React.useState('')
+    
     const handleSubmit = async (data) => {
         const { email, password, confirmPassword } = data;
 
@@ -79,8 +83,6 @@ const Register = ({ company }) => {
             alert('Password must match');
             return;
         }
-
-        //VALIDAR SENHA FORTE
 
         try {
             const response = await fetch('http://localhost:3001/users/post', {
@@ -106,7 +108,8 @@ const Register = ({ company }) => {
             setRegistered('success')
             setTimeout(() => {
                 setRegistered('')
-            }, 5000)
+                navigate('/login')
+            }, 1500)
         } catch (error) {
             console.error('Error:', error);
 
