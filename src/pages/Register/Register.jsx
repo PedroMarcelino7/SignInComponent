@@ -70,7 +70,7 @@ const Register = ({ company }) => {
             return;
         }
 
-        if (!password) {
+        if (!password || password == '') {
             alert('Invalid password');
             return;
         }
