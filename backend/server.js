@@ -64,6 +64,48 @@ app.post('/users/get', (req, res) => {
     });
 });
 
+app.post('/users/googleauth', (req, res) => {
+    const { userEmail } = req.body;
+    const query = `
+        SELECT USER_EMAIL 
+        FROM USERS 
+        WHERE USER_EMAIL = ?
+        `;
+    const values = [userEmail];
+
+    connection.query(query, values, async (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        if (results.length == 0) {
+            const queryPost = `
+                INSERT INTO
+                USERS (USER_EMAIL, USER_PASSWORD)
+                VALUES (?, '')
+            `
+
+            const values = [userEmail]
+
+            connection.query(queryPost, values, async (err, results) => {
+                if (err) {
+                    return res.status(500).send(err)
+                }
+
+                const token = jwt.sign({ email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
+                res.status(200).send({ token });
+            })
+        } else if (results.length > 0) {
+            const user = results[0];
+
+            const token = jwt.sign({ email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
+            res.status(200).send({ token });
+        } else {
+            res.status(404).send('Error');
+        }
+    });
+});
+
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {

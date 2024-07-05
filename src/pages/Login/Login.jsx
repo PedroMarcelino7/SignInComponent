@@ -64,7 +64,6 @@ const Login = ({ company }) => {
 
     const handleSubmit = async (data) => {
         const { email, password } = data;
-        console.log('Dados do formulário:', email, password);
 
         try {
             const response = await fetch('http://localhost:3001/users/get', {
@@ -75,6 +74,34 @@ const Login = ({ company }) => {
                 body: JSON.stringify({
                     userEmail: email,
                     userPassword: password
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            localStorage.setItem('authToken', result.token);
+
+            navigate('/');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const loginWithGoogle = async (credential) => {
+        const email = credential.email
+
+        try {
+            const response = await fetch('http://localhost:3001/users/googleauth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: email
                 }),
             });
 
@@ -200,6 +227,7 @@ const Login = ({ company }) => {
                                     <GoogleLogin
                                         onSuccess={(credentialResponse) => {
                                             const decoded = jwtDecode(credentialResponse?.credential);
+                                            loginWithGoogle(decoded)
                                             console.log(decoded);
                                         }}
                                         onError={() => {
