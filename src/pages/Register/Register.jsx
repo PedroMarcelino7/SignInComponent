@@ -65,8 +65,8 @@ const Register = ({ company }) => {
             return;
         }
 
-        if (email.length < 10 || email.length > 50) {
-            alert('Email length should be between 10 and 50');
+        if (email.length < 10 || email.length > 255) {
+            alert('Email length should be between 10 and 255');
             return;
         }
 
