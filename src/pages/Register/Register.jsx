@@ -60,7 +60,7 @@ const Register = ({ company }) => {
     const navigate = useNavigate();
 
     const [registered, setRegistered] = React.useState('')
-    
+
     const handleSubmit = async (data) => {
         const { email, password, confirmPassword } = data;
 
@@ -142,9 +142,18 @@ const Register = ({ company }) => {
 
             localStorage.setItem('authToken', result.token);
 
-            navigate('/');
+            setRegistered('success')
+            setTimeout(() => {
+                setRegistered('')
+                navigate('/')
+            }, 1500)
         } catch (error) {
             console.error('Error:', error);
+
+            setRegistered('error')
+            setTimeout(() => {
+                setRegistered('')
+            }, 5000)
         }
     }
 
@@ -295,9 +304,10 @@ const Register = ({ company }) => {
                                         onSuccess={(credentialResponse) => {
                                             const decoded = jwtDecode(credentialResponse?.credential);
                                             console.log(decoded);
+                                            registerWithGoogle(decoded)
                                         }}
                                         onError={() => {
-                                            console.log('Login Failed');
+                                            console.log('Register Failed');
                                         }}
                                     />
                                 </Box>
