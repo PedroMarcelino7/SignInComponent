@@ -292,7 +292,7 @@ const Login = ({ company }) => {
                                         }}
                                     >
                                         <Checkbox size="sm" label="Remember me" name="persistent" />
-                                        <Link level="title-sm" href="#replace-with-a-link">
+                                        <Link level="title-sm" href="/password">
                                             Forgot your password?
                                         </Link>
                                     </Box>
