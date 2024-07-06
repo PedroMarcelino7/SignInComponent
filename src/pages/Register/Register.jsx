@@ -120,6 +120,34 @@ const Register = ({ company }) => {
         }
     }
 
+    const registerWithGoogle = async (credential) => {
+        const email = credential.email
+
+        try {
+            const response = await fetch('http://localhost:3001/users/googleauth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: email
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            localStorage.setItem('authToken', result.token);
+
+            navigate('/');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
