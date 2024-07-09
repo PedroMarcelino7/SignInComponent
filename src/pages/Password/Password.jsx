@@ -47,37 +47,6 @@ const Password = ({ company }) => {
     document.title = `Change Password - ${company}`;
   }, [company]);
 
-  const navigate = useNavigate();
-
-  const handleSubmit = async (data) => {
-    const { email, password } = data;
-
-    try {
-      const response = await fetch('http://localhost:3001/users/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userEmail: email,
-          userPassword: password
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-
-      localStorage.setItem('authToken', result.token);
-
-      navigate('/');
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -189,7 +158,7 @@ const Password = ({ company }) => {
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Button type="submit" fullWidth>
-                    Recover password
+                    Change password
                   </Button>
                 </Stack>
               </form>
