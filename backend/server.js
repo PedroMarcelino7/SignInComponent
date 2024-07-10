@@ -106,17 +106,6 @@ app.post('/users/googleauth', (req, res) => {
     });
 });
 
-import send from '../src/pages/Password/nodeMailer.js'
-
-const sendMail = async (req, res) => {
-    const { to, subject, body } = req.body
-    send(to, subject, body)
-
-    return res.json('E-mail enviado com sucesso!')
-}
-
-export default sendMail
-
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
