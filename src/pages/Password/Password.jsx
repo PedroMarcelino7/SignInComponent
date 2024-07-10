@@ -1,6 +1,7 @@
+// Password.jsx
+
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -46,6 +47,29 @@ const Password = ({ company }) => {
   useEffect(() => {
     document.title = `Change Password - ${company}`;
   }, [company]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const email = formData.get('email');
+    try {
+      const response = await fetch('http://localhost:3001/users/recover', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      if (response.ok) {
+        alert('Email sent successfully!');
+      } else {
+        alert('Failed to send email.');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('Failed to send email.');
+    }
+  };
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -136,18 +160,7 @@ const Password = ({ company }) => {
               </Stack>
             </Stack>
             <Stack gap={4} sx={{ mt: 2 }}>
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value
-                  };
-
-                  handleSubmit(data)
-                }}
-              >
+              <form onSubmit={handleSubmit}>
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
                   <Input
@@ -195,7 +208,7 @@ const Password = ({ company }) => {
         })}
       />
     </CssVarsProvider>
-  )
+  );
 }
 
-export default Password
+export default Password;
