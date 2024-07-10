@@ -3,8 +3,6 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import { connection } from './db.js';
 
-dotenv.config();
-
 const app = express();
 const SECRET_KEY = 'logged';
 
@@ -108,6 +106,16 @@ app.post('/users/googleauth', (req, res) => {
     });
 });
 
+import send from '../src/pages/Password/nodeMailer.js'
+
+const sendMail = async (req, res) => {
+    const { to, subject, body } = req.body
+    send(to, subject, body)
+
+    return res.json('E-mail enviado com sucesso!')
+}
+
+export default sendMail
 
 const PORT = process.env.PORT || 3001;
 

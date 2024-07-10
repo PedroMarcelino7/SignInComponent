@@ -1,30 +1,24 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
+dotenv.config();
+
 const smtp = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
 });
 
-app.post('/users/recover', async (req, res) => {
-    const { email } = req.body;
-
-    const configEmail = {
+const send = (to, subject, body) => {
+    smtp.sendMail({
         from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Teste',
-        html: '<p>Este é um email de teste.</p>',
-    };
+        to,
+        subject,
+        text: body
+    })
+}
 
-    try {
-        await smtp.sendMail(configEmail);
-        res.status(200).send('Email sent successfully');
-    } catch (error) {
-        console.error('Error sending email:', error);
-        res.status(500).send('Failed to send email');
-    }
-});
+export default send
