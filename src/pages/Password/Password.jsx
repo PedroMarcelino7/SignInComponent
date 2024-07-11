@@ -48,6 +48,30 @@ const Password = ({ company }) => {
     document.title = `Change Password - ${company}`;
   }, [company]);
 
+  const handleSubmit = async (email) => {
+    console.log(email)
+
+    try {
+      const response = await fetch('http://localhost:3001/users/getEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: email,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -137,7 +161,14 @@ const Password = ({ company }) => {
               </Stack>
             </Stack>
             <Stack gap={4} sx={{ mt: 2 }}>
-              <form>
+              <form onSubmit={(event) => {
+                event.preventDefault()
+                const formElements = event.currentTarget.elements
+
+                const email = formElements.email.value
+
+                handleSubmit(email)
+              }}>
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
                   <Input

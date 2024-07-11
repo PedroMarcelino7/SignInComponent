@@ -41,7 +41,11 @@ app.post('/users/post', (req, res) => {
 app.post('/users/get', (req, res) => {
     const { userEmail, userPassword } = req.body;
     console.log('Dados recebidos:', userEmail, userPassword);
-    const query = `SELECT USER_EMAIL, USER_PASSWORD FROM USERS WHERE USER_EMAIL = ?`;
+    const query = `
+        SELECT USER_EMAIL, USER_PASSWORD
+        FROM USERS
+        WHERE USER_EMAIL = ?
+        `;
     const values = [userEmail];
 
     connection.query(query, values, async (err, results) => {
@@ -58,6 +62,32 @@ app.post('/users/get', (req, res) => {
             } else {
                 res.status(401).send('Invalid credentials');
             }
+        } else {
+            res.status(404).send('User not found');
+        }
+    });
+});
+
+app.post('/users/getEmail', (req, res) => {
+    const { userEmail } = req.body;
+    console.log('Dados recebidos:', userEmail);
+    const query = `
+        SELECT USER_EMAIL
+        FROM USERS
+        WHERE USER_EMAIL = ?
+        `;
+    const values = [userEmail];
+
+    connection.query(query, values, async (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        if (results.length > 0) {
+            const user = results[0];
+
+            console.log(user)
+            res.status(200).send(results);
         } else {
             res.status(404).send('User not found');
         }
