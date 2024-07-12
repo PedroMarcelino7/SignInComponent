@@ -48,8 +48,23 @@ const ChangePassword = ({ company }) => {
         document.title = `Change Password - ${company}`;
     }, [company]);
 
+    const [password, setPassword] = React.useState('')
+    const [confirmPassword, setConfirmPassword] = React.useState('')
+
+    useEffect(() => {
+        if(password === confirmPassword){
+            //---
+        }
+    }, [password, confirmPassword])
+
     const handleSubmit = async (data) => {
-        //
+        const { password, confirmPassword } = data
+        
+        if(password == confirmPassword){
+            
+        } else {
+            
+        }
     }
 
     return (
@@ -147,7 +162,7 @@ const ChangePassword = ({ company }) => {
 
                                 const data = {
                                     password: formElements.password.value,
-                                    passwordConfirm: formElements.passwordConfirm.value
+                                    confirmPassword: formElements.confirmPassword.value
                                 }
 
                                 handleSubmit(data)
@@ -158,14 +173,16 @@ const ChangePassword = ({ company }) => {
                                         type="text"
                                         name="password"
                                         autoComplete='password'
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </FormControl>
                                 <FormControl required>
                                     <FormLabel>Confirm Password</FormLabel>
                                     <Input
                                         type="text"
-                                        name="password"
+                                        name="confirmPassword"
                                         autoComplete='password'
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
                                     />
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
