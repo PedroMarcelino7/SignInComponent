@@ -4,6 +4,7 @@ import AuthRoutes from './AuthRoutes';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Password from './pages/Password/Password';
+import ChangePassword from './pages/Password/ChangePassword';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/login" element={<Login company="Pedro Marcelino" />} />
         <Route path="/register" element={<Register company="Pedro Marcelino" />} />
         <Route path="/password" element={<Password />} />
-        <Route path="/password/changepassword" element={<Password />} />
+        <Route path="/password/changepassword" element={<ChangePassword />} />
         <Route path="/password/validateemail" element={<Password />} />
         <Route path="/*" element={<AuthRoutes />} />
       </Routes>
