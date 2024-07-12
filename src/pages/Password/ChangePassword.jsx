@@ -48,7 +48,7 @@ const ChangePassword = ({ company }) => {
         document.title = `Change Password - ${company}`;
     }, [company]);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (data) => {
         //
     }
 
@@ -145,16 +145,27 @@ const ChangePassword = ({ company }) => {
                                 event.preventDefault()
                                 const formElements = event.currentTarget.elements
 
-                                const email = formElements.email.value
+                                const data = {
+                                    password: formElements.password.value,
+                                    passwordConfirm: formElements.passwordConfirm.value
+                                }
 
-                                handleSubmit(email)
+                                handleSubmit(data)
                             }}>
                                 <FormControl required>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>New Password</FormLabel>
                                     <Input
-                                        type="email"
-                                        name="email"
-                                        autoComplete='email'
+                                        type="text"
+                                        name="password"
+                                        autoComplete='password'
+                                    />
+                                </FormControl>
+                                <FormControl required>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <Input
+                                        type="text"
+                                        name="password"
+                                        autoComplete='password'
                                     />
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
