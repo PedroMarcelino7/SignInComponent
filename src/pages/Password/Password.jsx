@@ -180,7 +180,7 @@ const Password = ({ company }) => {
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Button type="submit" fullWidth>
-                    Change password
+                    Submit email
                   </Button>
                 </Stack>
               </form>

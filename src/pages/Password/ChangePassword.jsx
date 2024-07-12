@@ -48,29 +48,8 @@ const ChangePassword = ({ company }) => {
         document.title = `Change Password - ${company}`;
     }, [company]);
 
-    const handleSubmit = async (email) => {
-        try {
-            const response = await fetch('http://localhost:3001/users/getEmail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userEmail: email,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const res = await response.json();
-            const result = res[0].USER_EMAIL
-
-            console.log(result)
-        } catch (err) {
-            console.log(err)
-        }
+    const handleSubmit = async () => {
+        //
     }
 
     return (
