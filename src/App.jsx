@@ -12,6 +12,8 @@ function App() {
         <Route path="/login" element={<Login company="Pedro Marcelino" />} />
         <Route path="/register" element={<Register company="Pedro Marcelino" />} />
         <Route path="/password" element={<Password />} />
+        <Route path="/password/changepassword" element={<Password />} />
+        <Route path="/password/validateemail" element={<Password />} />
         <Route path="/*" element={<AuthRoutes />} />
       </Routes>
     </Router>
