@@ -34,6 +34,7 @@ app.post('/users/post', (req, res) => {
         if (err) {
             return res.status(500).send(err);
         }
+        
         res.status(201).json(results);
     });
 });
@@ -70,7 +71,9 @@ app.post('/users/get', (req, res) => {
 
 app.post('/users/getEmail', (req, res) => {
     const { userEmail } = req.body;
-    console.log('Dados recebidos:', userEmail);
+
+    console.log("Dados recebidos:", userEmail)
+
     const query = `
         SELECT USER_EMAIL
         FROM USERS
@@ -86,7 +89,8 @@ app.post('/users/getEmail', (req, res) => {
         if (results.length > 0) {
             const user = results[0];
 
-            console.log(user)
+            console.log("User:", user)
+            console.log("Results:", results)
             res.status(200).send(results);
         } else {
             res.status(404).send('User not found');

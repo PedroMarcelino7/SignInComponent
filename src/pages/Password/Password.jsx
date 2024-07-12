@@ -49,8 +49,6 @@ const Password = ({ company }) => {
   }, [company]);
 
   const handleSubmit = async (email) => {
-    console.log(email)
-
     try {
       const response = await fetch('http://localhost:3001/users/getEmail', {
         method: 'POST',
@@ -66,7 +64,10 @@ const Password = ({ company }) => {
         throw new Error(`Error: ${response.statusText}`);
       }
 
-      const result = await response.json();
+      const res = await response.json();
+      const result = res[0].USER_EMAIL
+
+      console.log(result)
     } catch (err) {
       console.log(err)
     }
