@@ -48,8 +48,8 @@ const ChangePassword = ({ company }) => {
         document.title = `Change Password - ${company}`;
     }, [company]);
 
-    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
     const [password, setPassword] = React.useState('')
+    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
     const [matchingPassword, setMatchingPassword] = React.useState(true)
 
     const passwordValidation = (password) => {
@@ -86,11 +86,6 @@ const ChangePassword = ({ company }) => {
     const handleSubmit = async (data) => {
         const { password, confirmPassword } = data
 
-        if (password == confirmPassword) {
-
-        } else {
-
-        }
     }
 
     return (
@@ -215,8 +210,9 @@ const ChangePassword = ({ company }) => {
                                         type="text"
                                         name="confirmPassword"
                                         autoComplete='password'
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        onChange={(e) => handleMatchingPassword(e.target.value)}
                                     />
+                                    {!matchingPassword && <Typography>Password must match.</Typography>}
                                 </FormControl>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Button type="submit" fullWidth>
