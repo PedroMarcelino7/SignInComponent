@@ -48,22 +48,48 @@ const ChangePassword = ({ company }) => {
         document.title = `Change Password - ${company}`;
     }, [company]);
 
+    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
     const [password, setPassword] = React.useState('')
-    const [confirmPassword, setConfirmPassword] = React.useState('')
+    const [matchingPassword, setMatchingPassword] = React.useState(true)
 
-    useEffect(() => {
-        if(password === confirmPassword){
-            //---
+    const passwordValidation = (password) => {
+        let weakness = 0;
+
+        if (password.length >= 16) {
+            weakness += 15;
         }
-    }, [password, confirmPassword])
+
+        if (/[!@#$%&*(){}\[\]/|:;,.+\-]/.test(password)) {
+            weakness += 15;
+        }
+
+        if (/[0-9]/.test(password)) {
+            weakness += 10;
+        }
+
+        if (/[A-Z]/.test(password)) {
+            weakness += 5;
+        }
+
+        if (/[a-z]/.test(password)) {
+            weakness += 5;
+        }
+
+        setPasswordWeakness(weakness);
+        setPassword(password)
+    };
+
+    const handleMatchingPassword = (confirmPassword) => {
+        confirmPassword == password ? setMatchingPassword(true) : setMatchingPassword(false)
+    }
 
     const handleSubmit = async (data) => {
         const { password, confirmPassword } = data
-        
-        if(password == confirmPassword){
-            
+
+        if (password == confirmPassword) {
+
         } else {
-            
+
         }
     }
 
