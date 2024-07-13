@@ -199,8 +199,15 @@ const ChangePassword = ({ company }) => {
                                         type="text"
                                         name="password"
                                         autoComplete='password'
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={(e) => passwordValidation(e.target.value)}
                                     />
+                                    {passwordWeakness > 0 && (
+                                        <Typography
+                                            color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
+                                        >
+                                            {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
+                                        </Typography>
+                                    )}
                                 </FormControl>
                                 <FormControl required>
                                     <FormLabel>Confirm Password</FormLabel>
