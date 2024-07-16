@@ -56,8 +56,13 @@ const Password = ({ company }) => {
 
     formData.append("access_key", accessKey);
 
+    const token = generateValidationToken()
+    formData.append("Validation Code", token)
+
     const object = Object.fromEntries(formData);
     const json = JSON.stringify(object);
+
+    console.log(json)
 
     const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -72,6 +77,10 @@ const Password = ({ company }) => {
       console.log("Success", res);
     }
   };
+
+  const generateValidationToken = () => {
+    return 1
+  }
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
