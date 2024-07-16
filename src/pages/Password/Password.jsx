@@ -48,15 +48,14 @@ const Password = ({ company }) => {
     document.title = `Change Password - ${company}`;
   }, [company]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
 
-    const formData = new FormData(event.target)
+    formData.append("access_key", "YOUR_ACCESS_KEY_HERE");
 
-    formData.append("acces_key", "YOUR_ACESS_KEY_HERE")
-
-    const object = Object.fromEntries(formData)
-    const json = JSON.stringify(object)
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
 
     const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -65,12 +64,12 @@ const Password = ({ company }) => {
         Accept: "application/json"
       },
       body: json
-    }).then((res) => res.json())
+    }).then((res) => res.json());
 
     if (res.success) {
-      console.log("Success", res)
+      console.log("Success", res);
     }
-  }
+  };
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -161,7 +160,7 @@ const Password = ({ company }) => {
               </Stack>
             </Stack>
             <Stack gap={4} sx={{ mt: 2 }}>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={onSubmit}>
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
                   <Input
