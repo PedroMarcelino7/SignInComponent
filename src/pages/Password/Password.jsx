@@ -1,5 +1,3 @@
-// Password.jsx
-
 import * as React from 'react';
 import { useEffect } from 'react';
 
@@ -43,7 +41,11 @@ function ColorSchemeToggle(props) {
   );
 }
 
+
 const Password = ({ company }) => {
+
+  const accessKey = import.meta.env.VITE_EMAIL_ACCESS_KEY;
+
   useEffect(() => {
     document.title = `Change Password - ${company}`;
   }, [company]);
@@ -52,7 +54,7 @@ const Password = ({ company }) => {
     event.preventDefault();
     const formData = new FormData(event.target);
 
-    formData.append("access_key", "YOUR_ACCESS_KEY_HERE");
+    formData.append("access_key", accessKey);
 
     const object = Object.fromEntries(formData);
     const json = JSON.stringify(object);
