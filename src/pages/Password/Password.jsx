@@ -48,28 +48,27 @@ const Password = ({ company }) => {
     document.title = `Change Password - ${company}`;
   }, [company]);
 
-  const handleSubmit = async (email) => {
-    try {
-      const response = await fetch('http://localhost:3001/users/getEmail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userEmail: email,
-        }),
-      });
+  const handleSubmit = async (event) => {
+    event.preventDefault()
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
+    const formData = new FormData(event.target)
 
-      const res = await response.json();
-      const result = res[0].USER_EMAIL
+    formData.append("acces_key", "YOUR_ACESS_KEY_HERE")
 
-      console.log(result)
-    } catch (err) {
-      console.log(err)
+    const object = Object.fromEntries(formData)
+    const json = JSON.stringify(object)
+
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: json
+    }).then((res) => res.json())
+
+    if (res.success) {
+      console.log("Success", res)
     }
   }
 
@@ -162,14 +161,7 @@ const Password = ({ company }) => {
               </Stack>
             </Stack>
             <Stack gap={4} sx={{ mt: 2 }}>
-              <form onSubmit={(event) => {
-                event.preventDefault()
-                const formElements = event.currentTarget.elements
-
-                const email = formElements.email.value
-
-                handleSubmit(email)
-              }}>
+              <form onSubmit={handleSubmit}>
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
                   <Input

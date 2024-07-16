@@ -34,7 +34,7 @@ app.post('/users/post', (req, res) => {
         if (err) {
             return res.status(500).send(err);
         }
-        
+
         res.status(201).json(results);
     });
 });
@@ -139,6 +139,18 @@ app.post('/users/googleauth', (req, res) => {
         }
     });
 });
+
+app.post('/users/recoverPassword', (req, res) => {
+    const { userPassword, userEmail } = req.body
+
+    const query = `
+    UPDATE USERS
+    SET USER_PASSWORD = ?
+    WHERE USER_EMAIL = ?;
+    `
+
+    const values = [userPassword, userEmail]
+})
 
 const PORT = process.env.PORT || 3001;
 
