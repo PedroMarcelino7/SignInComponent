@@ -16,6 +16,7 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import { useNavigate } from 'react-router-dom';
 
 function ColorSchemeToggle(props) {
   const { onClick, ...other } = props;
@@ -43,6 +44,7 @@ function ColorSchemeToggle(props) {
 
 
 const Password = ({ company }) => {
+  const navigate = useNavigate();
 
   const accessKey = import.meta.env.VITE_EMAIL_ACCESS_KEY;
 
@@ -75,6 +77,8 @@ const Password = ({ company }) => {
 
     if (res.success) {
       console.log("Success", res);
+
+      navi
     }
   };
 
