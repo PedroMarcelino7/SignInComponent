@@ -12,8 +12,7 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import FormControl from '@mui/joy/FormControl';
-import Input from '@mui/joy/Input';
+import InsertCodeInput from '../../components/Input/InsertCodeInput';
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -136,54 +135,17 @@ const InsertCode = ({ company }) => {
                         <Stack gap={4} sx={{ mt: 2 }}>
                             <form>
                                 <Stack gap={4} sx={{ mt: 2 }}>
-                                    <Stack direction="row" spacing={2} display='flex' justifyContent='center' alignItems='center'>
-                                        <Input
-                                            type="number"
-                                            onInput={(e) => {
-                                                if (e.target.value.length > 1) {
-                                                    e.target.value = e.target.value.slice(0, 1);
-                                                }
-                                            }}
-                                            sx={{
-                                                fontSize: 40,
-                                            }}
-                                        />
-                                        <Input
-                                            type="number"
-                                            onInput={(e) => {
-                                                if (e.target.value.length > 1) {
-                                                    e.target.value = e.target.value.slice(0, 1);
-                                                }
-                                            }}
-                                        />
-                                        <Input
-                                            type="number"
-                                            onInput={(e) => {
-                                                if (e.target.value.length > 1) {
-                                                    e.target.value = e.target.value.slice(0, 1);
-                                                }
-                                            }}
-                                        />
-                                        <Input
-                                            type="number"
-                                            onInput={(e) => {
-                                                if (e.target.value.length > 1) {
-                                                    e.target.value = e.target.value.slice(0, 1);
-                                                }
-                                            }}
-                                        />
-                                        <Input
-                                            type="number"
-                                            onInput={(e) => {
-                                                if (e.target.value.length > 1) {
-                                                    e.target.value = e.target.value.slice(0, 1);
-                                                }
-                                            }}
-                                        />
+                                    <Stack direction="row" spacing={2} display="flex" justifyContent="center" alignItems="center">
+                                        <InsertCodeInput />
+                                        <InsertCodeInput />
+                                        <InsertCodeInput />
+                                        <InsertCodeInput />
+                                        <InsertCodeInput />
                                     </Stack>
                                 </Stack>
                             </form>
                         </Stack>
+
                     </Box>
                     <Box component="footer" sx={{ py: 3 }}>
                         <Typography level="body-xs" textAlign="center">
