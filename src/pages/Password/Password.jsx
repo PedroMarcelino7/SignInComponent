@@ -79,7 +79,7 @@ const Password = ({ company }) => {
   };
 
   const generateValidationToken = () => {
-    const code = ['']
+    const code = []
 
     for (let i = 0; i < 5; i++) {
       const random = Math.floor(Math.random() * 10)
@@ -87,9 +87,7 @@ const Password = ({ company }) => {
       code.push(random)
     }
 
-    code.split(',').join('')
-
-    return code
+    return code.join('')
   }
 
   return (
