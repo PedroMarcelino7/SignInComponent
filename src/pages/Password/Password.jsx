@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -16,7 +18,6 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import { useNavigate } from 'react-router-dom';
 
 function ColorSchemeToggle(props) {
   const { onClick, ...other } = props;
@@ -76,8 +77,6 @@ const Password = ({ company }) => {
     }).then((res) => res.json());
 
     if (res.success) {
-      console.log("Success", res);
-
       navigate('/password/insertcode')
     }
   };
