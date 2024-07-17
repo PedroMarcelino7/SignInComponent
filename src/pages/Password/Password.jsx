@@ -78,7 +78,7 @@ const Password = ({ company }) => {
     if (res.success) {
       console.log("Success", res);
 
-      navi
+      navigate('/password/insertcode')
     }
   };
 
