@@ -13,6 +13,8 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import InsertCodeInput from '../../components/Input/InsertCodeInput';
+import Checkbox from '@mui/joy/Checkbox';
+import Button from '@mui/joy/Button';
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -144,6 +146,19 @@ const InsertCode = ({ company }) => {
                                     </Stack>
                                 </Stack>
                             </form>
+                        </Stack>
+                        <Stack gap={4} sx={{ mt: 2 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'end',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Link level="title-sm" href="/password">
+                                    Resend code!
+                                </Link>
+                            </Box>
                         </Stack>
                     </Box>
                     <Box component="footer" sx={{ py: 3 }}>
