@@ -87,7 +87,7 @@ const Password = ({ company }) => {
       code.push(random)
     }
 
-    
+    code.split(',').join('')
 
     return code
   }
