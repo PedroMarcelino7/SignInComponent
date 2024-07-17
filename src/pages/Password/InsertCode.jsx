@@ -145,7 +145,6 @@ const InsertCode = ({ company }) => {
                                 </Stack>
                             </form>
                         </Stack>
-
                     </Box>
                     <Box component="footer" sx={{ py: 3 }}>
                         <Typography level="body-xs" textAlign="center">
