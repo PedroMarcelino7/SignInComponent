@@ -51,15 +51,25 @@ const InsertCode = ({ company }) => {
 
     console.log(code)
 
-    const handleInputChange = (index, value) => {
-        console.log(index, value)
+    const validationCode = React.useState(Array(5))
 
-        for (let i = 0; i < 5; i++) {
-            if (value == code.split('')[index]) {
-                console.log('correto')
-            }
-        }
+    const handleInputChange = (index, value) => {
+        validationCode[index] = value
+
+        validateCode()
     }
+
+    const validateCode = () => {
+        if (JSON.stringify(validationCode) === JSON.stringify(code.split(''))) {
+            console.log('correto');
+        } else {
+            console.log('errado');
+        }
+    };
+
+    useEffect(() => {
+        validateCode();
+    }, [validationCode]);
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
