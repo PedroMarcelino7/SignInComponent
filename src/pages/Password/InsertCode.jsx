@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
+import { useLocation } from 'react-router-dom';
+
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -13,8 +15,6 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import InsertCodeInput from '../../components/Input/InsertCodeInput';
-import Checkbox from '@mui/joy/Checkbox';
-import Button from '@mui/joy/Button';
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -45,6 +45,21 @@ const InsertCode = ({ company }) => {
     useEffect(() => {
         document.title = `Change Password - ${company}`;
     }, [company]);
+
+    const location = useLocation();
+    const { code } = location.state;
+
+    console.log(code)
+
+    const handleInputChange = (index, value) => {
+        console.log(index, value)
+
+        for (let i = 0; i < 5; i++) {
+            if (value == code.split('')[index]) {
+                console.log('correto')
+            }
+        }
+    }
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -138,11 +153,14 @@ const InsertCode = ({ company }) => {
                             <form>
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Stack direction="row" spacing={2} display="flex" justifyContent="center" alignItems="center">
-                                        <InsertCodeInput />
-                                        <InsertCodeInput />
-                                        <InsertCodeInput />
-                                        <InsertCodeInput />
-                                        <InsertCodeInput />
+                                        {Array(5).fill(0).map((_, index) => (
+                                            <InsertCodeInput
+                                                key={index}
+                                                index={index}
+                                                name={`input-${index}`}
+                                                handleInputChange={handleInputChange}
+                                            />
+                                        ))}
                                     </Stack>
                                 </Stack>
                             </form>
