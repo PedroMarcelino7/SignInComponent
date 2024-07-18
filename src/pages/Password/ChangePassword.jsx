@@ -1,5 +1,3 @@
-// Password.jsx
-
 import * as React from 'react';
 import { useEffect } from 'react';
 
@@ -18,6 +16,7 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import { useLocation } from 'react-router-dom';
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -47,6 +46,9 @@ const ChangePassword = ({ company }) => {
     useEffect(() => {
         document.title = `Change Password - ${company}`;
     }, [company]);
+
+    const location = useLocation();
+    const { email } = location.state || {};
 
     const [password, setPassword] = React.useState('')
     const [passwordWeakness, setPasswordWeakness] = React.useState(0)
@@ -84,8 +86,30 @@ const ChangePassword = ({ company }) => {
     }
 
     const handleSubmit = async (data) => {
-        const { password, confirmPassword } = data
+        const { password } = data
 
+        if (matchingPassword) {
+            try {
+                const response = await fetch('http://localhost:3001/users/changePassword', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userPassword: password,
+                        userEmail: email
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
     }
 
     return (
@@ -183,7 +207,6 @@ const ChangePassword = ({ company }) => {
 
                                 const data = {
                                     password: formElements.password.value,
-                                    confirmPassword: formElements.confirmPassword.value
                                 }
 
                                 handleSubmit(data)

@@ -140,7 +140,7 @@ app.post('/users/googleauth', (req, res) => {
     });
 });
 
-app.post('/users/recoverPassword', (req, res) => {
+app.post('/users/changePassword', (req, res) => {
     const { userPassword, userEmail } = req.body
 
     const query = `
