@@ -64,7 +64,7 @@ const InsertCode = ({ company }) => {
 
     const validateCode = () => {
         if (JSON.stringify(validationCode) === JSON.stringify(code.split(''))) {
-            navigate('/password/changepassword')
+            navigate('/password/changepassword', { state: { email } })
         }
     };
 
