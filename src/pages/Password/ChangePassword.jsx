@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
+import { useLocation } from 'react-router-dom';
+
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -16,7 +18,7 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import { useLocation } from 'react-router-dom';
+import Alert from '@mui/joy/Alert';
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -53,6 +55,7 @@ const ChangePassword = ({ company }) => {
     const [password, setPassword] = React.useState('')
     const [passwordWeakness, setPasswordWeakness] = React.useState(0)
     const [matchingPassword, setMatchingPassword] = React.useState(true)
+    const [changed, setChanged] = React.useState('')
 
     const passwordValidation = (password) => {
         let weakness = 0;
@@ -106,9 +109,19 @@ const ChangePassword = ({ company }) => {
                 }
 
                 const result = await response.json();
-                console.log('senha alterada com sucesso')
+
+                setChanged('success')
+                setTimeout(() => {
+                    setChanged('')
+                    navigate('/')
+                }, 1500)
             } catch (error) {
                 console.error('Error:', error);
+
+                setChanged('error')
+                setTimeout(() => {
+                    setChanged('')
+                }, 5000)
             }
         }
     }
@@ -188,6 +201,7 @@ const ChangePassword = ({ company }) => {
                             },
                         }}
                     >
+                        {changed == 'success' ? <Alert color="success">Password successfully changed.</Alert> : (changed == 'error' && <Alert color="danger">Password change error.</Alert>)}
                         <Stack gap={4} sx={{ mb: 2 }}>
                             <Stack gap={1}>
                                 <Typography component="h1" level="h3">
