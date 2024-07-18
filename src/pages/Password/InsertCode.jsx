@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -46,24 +47,24 @@ const InsertCode = ({ company }) => {
         document.title = `Change Password - ${company}`;
     }, [company]);
 
+    const navigate = useNavigate();
+
     const location = useLocation();
-    const { code } = location.state;
+    const { code, email } = location.state || {};
 
-    console.log(code)
+    console.log(code, email)
 
-    const validationCode = React.useState(Array(5))
+    const [validationCode, setValidationCode] = React.useState(Array(5))
 
     const handleInputChange = (index, value) => {
-        validationCode[index] = value
-
-        validateCode()
+        const newValidationCode = [...validationCode];
+        newValidationCode[index] = value;
+        setValidationCode(newValidationCode);
     }
 
     const validateCode = () => {
         if (JSON.stringify(validationCode) === JSON.stringify(code.split(''))) {
-            console.log('correto');
-        } else {
-            console.log('errado');
+            navigate('/password/changepassword')
         }
     };
 

@@ -62,10 +62,10 @@ const Password = ({ company }) => {
     const code = generateValidationToken()
     formData.append("Validation Code", code)
 
+    const email = formData.get('email');
+
     const object = Object.fromEntries(formData);
     const json = JSON.stringify(object);
-
-    console.log(json)
 
     const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -77,7 +77,7 @@ const Password = ({ company }) => {
     }).then((res) => res.json());
 
     if (res.success) {
-      navigate('/password/insertcode', { state: { code } })
+      navigate('/password/insertcode', { state: { code, email } })
     }
   };
 
