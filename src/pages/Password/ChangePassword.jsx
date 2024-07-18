@@ -106,6 +106,7 @@ const ChangePassword = ({ company }) => {
                 }
 
                 const result = await response.json();
+                console.log('senha alterada com sucesso')
             } catch (error) {
                 console.error('Error:', error);
             }

@@ -150,6 +150,14 @@ app.post('/users/changePassword', (req, res) => {
     `
 
     const values = [userPassword, userEmail]
+
+    connection.query(query, values, (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        res.status(201).json(results);
+    });
 })
 
 const PORT = process.env.PORT || 3001;
