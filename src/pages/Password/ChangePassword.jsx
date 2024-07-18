@@ -114,14 +114,14 @@ const ChangePassword = ({ company }) => {
                 setTimeout(() => {
                     setChanged('')
                     navigate('/')
-                }, 1500)
+                }, 2000)
             } catch (error) {
                 console.error('Error:', error);
 
                 setChanged('error')
                 setTimeout(() => {
                     setChanged('')
-                }, 5000)
+                }, 1500)
             }
         }
     }
