@@ -49,6 +49,8 @@ const InsertCode = ({ company }) => {
 
     const navigate = useNavigate();
 
+    const accessKey = import.meta.env.VITE_EMAIL_ACCESS_KEY;
+
     const location = useLocation();
     const { code, email } = location.state || {};
 
@@ -71,6 +73,46 @@ const InsertCode = ({ company }) => {
     useEffect(() => {
         validateCode();
     }, [validationCode]);
+
+    const resendCode = async () => {
+        const formData = new FormData();
+
+        formData.append("access_key", accessKey);
+
+        formData.append("Email", email)
+
+        const code = generateValidationToken()
+        formData.append("Validation Code", code)
+
+
+        const object = Object.fromEntries(formData);
+        const json = JSON.stringify(object);
+
+        const res = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            body: json
+        }).then((res) => res.json());
+
+        if (res.success) {
+            navigate('/password/insertcode', { state: { code, email } })
+        }
+    }
+
+    const generateValidationToken = () => {
+        const code = []
+
+        for (let i = 0; i < 5; i++) {
+            const random = Math.floor(Math.random() * 10)
+
+            code.push(random)
+        }
+
+        return code.join('')
+    }
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -184,7 +226,7 @@ const InsertCode = ({ company }) => {
                                     alignItems: 'center',
                                 }}
                             >
-                                <Link level="title-sm" href="/password">
+                                <Link level="title-sm" onClick={resendCode}>
                                     Resend code!
                                 </Link>
                             </Box>

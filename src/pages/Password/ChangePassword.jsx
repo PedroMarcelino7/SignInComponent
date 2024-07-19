@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -48,6 +49,8 @@ const ChangePassword = ({ company }) => {
     useEffect(() => {
         document.title = `Change Password - ${company}`;
     }, [company]);
+
+    const navigate = useNavigate();
 
     const location = useLocation();
     const { email } = location.state || {};
@@ -113,7 +116,7 @@ const ChangePassword = ({ company }) => {
                 setChanged('success')
                 setTimeout(() => {
                     setChanged('')
-                    navigate('/')
+                    navigate('/login')
                 }, 2000)
             } catch (error) {
                 console.error('Error:', error);
