@@ -55,8 +55,9 @@ const InsertCode = ({ company }) => {
 
     const location = useLocation();
     const { code, email } = location.state || {};
+    const [currentCode, setCurrentCode] = React.useState(code)
 
-    console.log(code, email)
+    console.log(currentCode, email)
 
     const [validationCode, setValidationCode] = React.useState(Array(5))
 
@@ -67,7 +68,7 @@ const InsertCode = ({ company }) => {
     }
 
     const validateCode = () => {
-        if (JSON.stringify(validationCode) === JSON.stringify(code.split(''))) {
+        if (JSON.stringify(validationCode) === JSON.stringify(currentCode.split(''))) {
             navigate('/password/changepassword', { state: { email } })
         }
     };
@@ -84,7 +85,7 @@ const InsertCode = ({ company }) => {
         formData.append("Email", email)
 
         const code = generateValidationToken()
-        formData.append("Validation Code", code)
+        formData.append("Validation Code", currentCode)
 
 
         const object = Object.fromEntries(formData);
@@ -116,7 +117,7 @@ const InsertCode = ({ company }) => {
             code.push(random)
         }
 
-        return code.join('')
+        setCurrentCode(code.join(''))
     }
 
     const [codeSent, setCodeSent] = React.useState('')
