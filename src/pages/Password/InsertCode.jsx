@@ -16,6 +16,7 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import InsertCodeInput from '../../components/Input/InsertCodeInput';
+import Alert from '@mui/joy/Alert';
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -46,6 +47,7 @@ const InsertCode = ({ company }) => {
     useEffect(() => {
         document.title = `Change Password - ${company}`;
     }, [company]);
+
 
     const navigate = useNavigate();
 
@@ -98,7 +100,10 @@ const InsertCode = ({ company }) => {
         }).then((res) => res.json());
 
         if (res.success) {
-            navigate('/password/insertcode', { state: { code, email } })
+            setCodeSent('success')
+            setTimeout(() => {
+                setCodeSent('')
+            }, 5000)
         }
     }
 
@@ -113,6 +118,8 @@ const InsertCode = ({ company }) => {
 
         return code.join('')
     }
+
+    const [codeSent, setCodeSent] = React.useState('')
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -189,6 +196,7 @@ const InsertCode = ({ company }) => {
                             },
                         }}
                     >
+                        {codeSent == 'success' ? <Alert color="success">Code resent successfully.</Alert> : (codeSent == 'error' && <Alert color="danger">Code resent error.</Alert>)}
                         <Stack gap={4} sx={{ mb: 2 }}>
                             <Stack gap={1}>
                                 <Typography component="h1" level="h3">
