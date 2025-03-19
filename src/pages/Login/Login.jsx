@@ -66,7 +66,7 @@ const Login = ({ company }) => {
         const { email, password } = data;
 
         try {
-            const response = await fetch('http://localhost:3001/users/get', {
+            const response = await fetch('http://localhost:3002/users/get', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const Login = ({ company }) => {
         const email = credential.email
 
         try {
-            const response = await fetch('http://localhost:3001/users/googleauth', {
+            const response = await fetch('http://localhost:3002/users/googleauth', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

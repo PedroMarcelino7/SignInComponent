@@ -96,7 +96,7 @@ const ChangePassword = ({ company }) => {
 
         if (matchingPassword) {
             try {
-                const response = await fetch('http://localhost:3001/users/changePassword', {
+                const response = await fetch('http://localhost:3002/users/changePassword', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

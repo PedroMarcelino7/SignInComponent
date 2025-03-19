@@ -85,7 +85,7 @@ const Register = ({ company }) => {
         }
 
         try {
-            const response = await fetch('http://localhost:3001/users/post', {
+            const response = await fetch('http://localhost:3002/users/post', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const Register = ({ company }) => {
         const email = credential.email
 
         try {
-            const response = await fetch('http://localhost:3001/users/googleauth', {
+            const response = await fetch('http://localhost:3002/users/googleauth', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

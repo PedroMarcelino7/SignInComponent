@@ -1,18 +1,22 @@
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+import bcrypt from 'bcrypt'
 import { connection } from './db.js';
 
 const app = express();
 const SECRET_KEY = 'logged';
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5174',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
 }));
 
 app.use(express.json());
+
+app.use(cookieParser())
 
 app.get('/users', (req, res) => {
     connection.query('SELECT * FROM USERS', (err, results) => {
@@ -41,30 +45,35 @@ app.post('/users/post', (req, res) => {
 
 app.post('/users/get', (req, res) => {
     const { userEmail, userPassword } = req.body;
+
     console.log('Dados recebidos:', userEmail, userPassword);
-    const query = `
-        SELECT USER_EMAIL, USER_PASSWORD
-        FROM USERS
-        WHERE USER_EMAIL = ?
-        `;
+
+    const query = `SELECT USER_EMAIL, USER_PASSWORD FROM USERS WHERE USER_EMAIL = ?`;
     const values = [userEmail];
 
     connection.query(query, values, async (err, results) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).send({ error: 'Erro no servidor' });
         }
 
-        if (results.length > 0) {
-            const user = results[0];
+        if (results.length === 0) {
+            return res.status(404).send({ error: 'Usuário não encontrado' });
+        }
 
-            if (userPassword == user.USER_PASSWORD) {
-                const token = jwt.sign({ email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
-                res.status(200).send({ token });
-            } else {
-                res.status(401).send('Invalid credentials');
-            }
+        const user = results[0];
+
+        if (user.USER_PASSWORD === userPassword) {
+            const token = jwt.sign({ email: userEmail }, SECRET_KEY, { expiresIn: '1h' });
+
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax',
+            });
+
+            res.status(200).send({ message: 'Login realizado', token });
         } else {
-            res.status(404).send('User not found');
+            console.log('pé')
         }
     });
 });
@@ -160,7 +169,7 @@ app.post('/users/changePassword', (req, res) => {
     });
 })
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
