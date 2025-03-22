@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GoogleLogin } from '@react-oauth/google';
@@ -27,13 +27,21 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
+//-- SUPABASE
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseURL = import.meta.env.VITE_SUPABASE_URL
+const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
+
+const supabase = createClient(supabaseURL, supabaseKEY);
+//-- SUPABASE
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
     const { mode, setMode } = useColorScheme();
     const [mounted, setMounted] = React.useState(false);
 
-    React.useEffect(() => setMounted(true), []);
+    useEffect(() => setMounted(true), []);
 
     return (
         <IconButton
@@ -53,17 +61,22 @@ function ColorSchemeToggle(props) {
 }
 
 const Register = ({ company }) => {
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [passwordConfirm, setPasswordConfirm] = useState("")
+
+    const [matchingPassword, setMatchingPassword] = useState(true)
+
     useEffect(() => {
         document.title = `Register - ${company}`;
     }, []);
 
     const navigate = useNavigate();
 
-    const [registered, setRegistered] = React.useState('')
+    const [registered, setRegistered] = useState('')
 
-    const handleSubmit = async (data) => {
-        const { email, password, confirmPassword } = data;
-
+    const handleSubmit = async () => {
         if (!email) {
             alert('Invalid email');
             return;
@@ -79,45 +92,64 @@ const Register = ({ company }) => {
             return;
         }
 
-        if (password !== confirmPassword) {
+        if (password !== passwordConfirm) {
             alert('Password must match');
             return;
         }
 
-        try {
-            const response = await fetch('http://localhost:3002/users/post', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userEmail: email,
-                    userPassword: password,
-                    userConfirmPassword: confirmPassword
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-
-            console.log('Success:', result);
-
-            setRegistered('success')
-            setTimeout(() => {
-                setRegistered('')
-                navigate('/login')
-            }, 2000)
-        } catch (error) {
-            console.error('Error:', error);
-
-            setRegistered('error')
-            setTimeout(() => {
-                setRegistered('')
-            }, 1500)
+        const newUser = {
+            user_name: name,
+            user_email: email,
+            user_password: password
         }
+
+        const { data, error } = await supabase.from("Users").insert([newUser]).single()
+
+        if (error) {
+            console.log("Error:", error)
+        } else {
+            setName("")
+            setEmail("")
+            setPassword("")
+            setPasswordConfirm("")
+
+            navigate('/')
+        }
+
+        // try {
+        //     const response = await fetch('http://localhost:3002/users/post', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({
+        //             userEmail: email,
+        //             userPassword: password,
+        //             userPasswordConfirm: passwordConfirm
+        //         }),
+        //     });
+
+        //     if (!response.ok) {
+        //         throw new Error(`Error: ${response.statusText}`);
+        //     }
+
+        //     const result = await response.json();
+
+        //     console.log('Success:', result);
+
+        //     setRegistered('success')
+        //     setTimeout(() => {
+        //         setRegistered('')
+        //         navigate('/login')
+        //     }, 2000)
+        // } catch (error) {
+        //     console.error('Error:', error);
+
+        //     setRegistered('error')
+        //     setTimeout(() => {
+        //         setRegistered('')
+        //     }, 1500)
+        // }
     }
 
     const registerWithGoogle = async (credential) => {
@@ -161,8 +193,8 @@ const Register = ({ company }) => {
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const [passwordWeakness, setPasswordWeakness] = React.useState(0)
-    const [password, setPassword] = React.useState('')
-    const passwordValidation = (password) => {
+
+    const passwordValidation = () => {
         let weakness = 0;
 
         if (password.length >= 16) {
@@ -189,10 +221,17 @@ const Register = ({ company }) => {
         setPassword(password)
     };
 
-    const [matchingPassword, setMatchingPassword] = React.useState(true)
-    const handleMatchingPassword = (confirmPassword) => {
-        confirmPassword == password ? setMatchingPassword(true) : setMatchingPassword(false)
+    const handleMatchingPassword = () => {
+        passwordConfirm === password ? setMatchingPassword(true) : setMatchingPassword(false)
     }
+
+    useEffect(() => {
+        passwordValidation()
+    }, [password])
+
+    useEffect(() => {
+        handleMatchingPassword()
+    }, [passwordConfirm])
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -330,18 +369,30 @@ const Register = ({ company }) => {
                                     const data = {
                                         email: formElements.email.value,
                                         password: formElements.password.value,
-                                        confirmPassword: formElements.confirmPassword.value
+                                        passwordConfirm: formElements.passwordConfirm.value
                                     };
 
                                     handleSubmit(data)
                                 }}
                             >
                                 <FormControl required>
+                                    <FormLabel>Name</FormLabel>
+                                    <Input
+                                        type="text"
+                                        name="name"
+                                        autoComplete='name'
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </FormControl>
+                                <FormControl required>
                                     <FormLabel>Email</FormLabel>
                                     <Input
                                         type="email"
                                         name="email"
                                         autoComplete='email'
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </FormControl>
                                 <FormControl required>
@@ -350,7 +401,8 @@ const Register = ({ company }) => {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         autoComplete='new-password'
-                                        onChange={(e) => passwordValidation(e.target.value)}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
@@ -372,9 +424,10 @@ const Register = ({ company }) => {
                                     <FormLabel>Confirm Password</FormLabel>
                                     <Input
                                         type={showPassword ? 'text' : 'password'}
-                                        name="confirmPassword"
+                                        name="passwordConfirm"
                                         autoComplete='new-password'
-                                        onChange={(e) => handleMatchingPassword(e.target.value)}
+                                        value={passwordConfirm}
+                                        onChange={(e) => setPasswordConfirm(e.target.value)}
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}

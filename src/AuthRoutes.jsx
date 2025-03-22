@@ -4,18 +4,20 @@ import MainPage from './pages/Main/MainPage';
 import Login from './pages/Login/Login';
 
 function AuthRoutes() {
-  const authToken = localStorage.getItem('authToken');
+  const authToken = localStorage.getItem('token');
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authToken) {
+    if (authToken) {
+      window.location.href = 'http://localhost:5173'
+    } else {
       navigate('/login');
     }
-  }, [authToken, navigate]);
+  }, []);
 
   return (
     <Routes>
-      <Route path="/" element={authToken ? <MainPage /> : <Login company="Pedro Marcelino" />} />
+      <Route path="/" element={!authToken && <Login company="Pedro Marcelino" />} />
     </Routes>
   );
 }

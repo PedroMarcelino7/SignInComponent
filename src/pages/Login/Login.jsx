@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { GoogleLogin } from '@react-oauth/google';
@@ -27,7 +27,18 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
+//-- SUPABASE
+import { createClient } from "@supabase/supabase-js";
 
+const supabaseURL = import.meta.env.VITE_SUPABASE_URL
+const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
+
+const supabase = createClient(supabaseURL, supabaseKEY);
+//-- SUPABASE
+
+
+
+//-- Color Scheme Toggle
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
     const { mode, setMode } = useColorScheme();
@@ -51,73 +62,96 @@ function ColorSchemeToggle(props) {
         </IconButton>
     );
 }
+//-- Color Scheme Toggle
 
+
+
+//-----
 const Login = ({ company }) => {
+    //-- Variables
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const [showPassword, setShowPassword] = useState(false);
+    //-- Variables
+
+
+
+    //-- Use Effects
+    useEffect(() => {
+        localStorage.removeItem('token')
+    }, [])
+
     useEffect(() => {
         document.title = `Login - ${company}`;
     }, [company]);
+    //-- Use Effects
 
-    const [showPassword, setShowPassword] = React.useState(false);
+
+
+    //-- Functions
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const navigate = useNavigate();
-
-    const handleSubmit = async (data) => {
-        const { email, password } = data;
-
-        try {
-            const response = await fetch('http://localhost:3002/users/get', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userEmail: email,
-                    userPassword: password
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-
-            localStorage.setItem('authToken', result.token);
-
-            navigate('/');
-        } catch (error) {
-            console.error('Error:', error);
+    const generateToken = (data) => {
+        if (data.user_password === password) {
+            const token = (`${data.user_id}-${import.meta.env.VITE_AUTH_TOKEN}`);
+            localStorage.setItem('token', token)
+        } else {
+            console.log("Password don't match")
         }
     }
+    //-- Functions
 
-    const loginWithGoogle = async (credential) => {
-        const email = credential.email
 
-        try {
-            const response = await fetch('http://localhost:3002/users/googleauth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userEmail: email
-                }),
-            });
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
+    //-- Handle Submit
+    const handleSubmit = async () => {
+        console.log(email, password)
 
-            const result = await response.json();
+        const { data, error } = await supabase.from('Users').select("*").eq('user_email', email).single()
 
-            localStorage.setItem('authToken', result.token);
-
-            navigate('/');
-        } catch (error) {
-            console.error('Error:', error);
+        if (error) {
+            console.log("Error:", error)
+            return
+        } else {
+            generateToken(data)
         }
+
+        navigate('/');
     }
+    //-- Handle Submit
+
+
+
+    // const loginWithGoogle = async (credential) => {
+    //     const email = credential.email
+
+    //     try {
+    //         const response = await fetch('http://localhost:3002/users/googleauth', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 userEmail: email
+    //             }),
+    //         });
+
+    //         if (!response.ok) {
+    //             throw new Error(`Error: ${response.statusText}`);
+    //         }
+
+    //         const result = await response.json();
+
+    //         localStorage.setItem('authToken', result.token);
+
+    //         navigate('/');
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // }
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -249,14 +283,9 @@ const Login = ({ company }) => {
                         <Stack gap={4} sx={{ mt: 2 }}>
                             <form
                                 onSubmit={(event) => {
-                                    event.preventDefault();
-                                    const formElements = event.currentTarget.elements;
-                                    const data = {
-                                        email: formElements.email.value,
-                                        password: formElements.password.value
-                                    };
+                                    event.preventDefault()
 
-                                    handleSubmit(data)
+                                    handleSubmit()
                                 }}
                             >
                                 <FormControl required>
@@ -265,6 +294,8 @@ const Login = ({ company }) => {
                                         type="email"
                                         name="email"
                                         autoComplete='email'
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </FormControl>
                                 <FormControl required>
@@ -273,6 +304,8 @@ const Login = ({ company }) => {
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
                                         autoComplete='new-password'
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         endDecorator={
                                             <IconButton
                                                 onClick={handleClickShowPassword}
