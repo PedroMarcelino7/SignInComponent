@@ -15,13 +15,15 @@ import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import IconButton from '@mui/joy/IconButton';
-import Link from '@mui/joy/Link';
+// import Link from '@mui/joy/Link';
 import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+
+import RedirectLink from '../../components/Link/RedirectLink'
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -125,33 +127,33 @@ const Login = ({ company }) => {
 
 
 
-    // const loginWithGoogle = async (credential) => {
-    //     const email = credential.email
+    const loginWithGoogle = async (credential) => {
+        const email = credential.email
 
-    //     try {
-    //         const response = await fetch('http://localhost:3002/users/googleauth', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 userEmail: email
-    //             }),
-    //         });
+        try {
+            const response = await fetch('http://localhost:3002/users/googleauth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: email
+                }),
+            });
 
-    //         if (!response.ok) {
-    //             throw new Error(`Error: ${response.statusText}`);
-    //         }
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
 
-    //         const result = await response.json();
+            const result = await response.json();
 
-    //         localStorage.setItem('authToken', result.token);
+            localStorage.setItem('authToken', result.token);
 
-    //         navigate('/');
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // }
+            navigate('/');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -235,9 +237,7 @@ const Login = ({ company }) => {
                                 </Typography>
                                 <Typography level="body-sm">
                                     New to {company}?{' '}
-                                    <Link href='/register' level="title-sm">
-                                        Sign up!
-                                    </Link>
+                                    <RedirectLink path='/register' label='Sign Up!' />
                                 </Typography>
                             </Stack>
                             <Button
@@ -325,9 +325,7 @@ const Login = ({ company }) => {
                                         }}
                                     >
                                         <Checkbox size="sm" label="Remember me" name="persistent" />
-                                        <Link level="title-sm" href="/password">
-                                            Forgot your password?
-                                        </Link>
+                                        <RedirectLink path='/password' label='Forgot your password?' />
                                     </Box>
                                     <Button type="submit" fullWidth>
                                         Sign in

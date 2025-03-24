@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -12,7 +13,7 @@ import Button from '@mui/joy/Button';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import IconButton from '@mui/joy/IconButton';
-import Link from '@mui/joy/Link';
+// import Link from '@mui/joy/Link';
 import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
@@ -20,6 +21,8 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import Alert from '@mui/joy/Alert';
+
+import RedirectLink from '../../components/Link/RedirectLink'
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -212,9 +215,7 @@ const ChangePassword = ({ company }) => {
                                 </Typography>
                                 <Typography level="body-sm">
                                     Return to {' '}
-                                    <Link href='/login' level="title-sm">
-                                        Sign in!
-                                    </Link>
+                                    <RedirectLink path='login' label='Sign in!' />
                                 </Typography>
                             </Stack>
                         </Stack>

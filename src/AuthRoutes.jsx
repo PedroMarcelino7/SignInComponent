@@ -8,16 +8,20 @@ function AuthRoutes() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authToken) {
-      window.location.href = 'http://localhost:5173'
-    } else {
-      navigate('/login');
-    }
+    // if (!authToken) {
+    //   navigate('/login');
+    // }
+    
+    // if (authToken) {
+    //   window.location.href = 'http://localhost:5173'
+    // } else {
+    //   navigate('/login');
+    // }
   }, []);
 
   return (
     <Routes>
-      <Route path="/" element={!authToken && <Login company="Pedro Marcelino" />} />
+      <Route path="/" element={authToken ? <MainPage /> : <Login company="Pedro Marcelino" />} />
     </Routes>
   );
 }

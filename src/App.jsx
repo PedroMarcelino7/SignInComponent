@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import AuthRoutes from './AuthRoutes';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
@@ -16,7 +16,7 @@ function App() {
         <Route path="/password" element={<Password />} />
         <Route path="/password/insertcode" element={<InsertCode />} />
         <Route path="/password/changepassword" element={<ChangePassword />} />
-        <Route path="/*" element={<AuthRoutes />} />
+        <Route path="/" element={<AuthRoutes />} />
       </Routes>
     </Router>
   );

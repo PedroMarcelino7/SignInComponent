@@ -3,13 +3,14 @@ import { useEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
-import Link from '@mui/joy/Link';
+// import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
@@ -17,6 +18,8 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import InsertCodeInput from '../../components/Input/InsertCodeInput';
 import Alert from '@mui/joy/Alert';
+
+import RedirectLink from '../../components/Link/RedirectLink';
 
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
@@ -205,9 +208,7 @@ const InsertCode = ({ company }) => {
                                 </Typography>
                                 <Typography level="body-sm">
                                     Return to {' '}
-                                    <Link href='/login' level="title-sm">
-                                        Sign in!
-                                    </Link>
+                                    <RedirectLink path='login' label='Sign in!' />
                                 </Typography>
                             </Stack>
                         </Stack>
@@ -235,9 +236,12 @@ const InsertCode = ({ company }) => {
                                     alignItems: 'center',
                                 }}
                             >
-                                <Link level="title-sm" onClick={resendCode}>
+                                <label
+                                    onClick={resendCode}
+                                    style={{ textDecoration: 'none', color: '#227fdd', cursor: 'pointer' }}
+                                >
                                     Resend code!
-                                </Link>
+                                </label>
                             </Box>
                         </Stack>
                     </Box>
