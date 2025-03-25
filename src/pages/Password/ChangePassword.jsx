@@ -24,6 +24,15 @@ import Alert from '@mui/joy/Alert';
 
 import RedirectLink from '../../components/Link/RedirectLink'
 
+//-- SUPABASE
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseURL = import.meta.env.VITE_SUPABASE_URL
+const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
+
+const supabase = createClient(supabaseURL, supabaseKEY);
+//-- SUPABASE
+
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
     const { mode, setMode } = useColorScheme();
@@ -98,37 +107,58 @@ const ChangePassword = ({ company }) => {
         const { password } = data
 
         if (matchingPassword) {
-            try {
-                const response = await fetch('http://localhost:3002/users/changePassword', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userPassword: password,
-                        userEmail: email
-                    }),
-                });
 
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
+            const { data, error } = await supabase.from('Users').update({ user_password: password }).eq('user_email', email)
 
-                const result = await response.json();
+            if (error) {
+                console.log('Error:', error)
 
+                setChanged('error')
+                
+                setTimeout(() => {
+                    setChanged('')
+                }, 1500)
+            } else {
                 setChanged('success')
+
                 setTimeout(() => {
                     setChanged('')
                     navigate('/login')
                 }, 2000)
-            } catch (error) {
-                console.error('Error:', error);
-
-                setChanged('error')
-                setTimeout(() => {
-                    setChanged('')
-                }, 1500)
             }
+
+
+            // try {
+            //     const response = await fetch('http://localhost:3002/users/changePassword', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify({
+            //             userPassword: password,
+            //             userEmail: email
+            //         }),
+            //     });
+
+            //     if (!response.ok) {
+            //         throw new Error(`Error: ${response.statusText}`);
+            //     }
+
+            //     const result = await response.json();
+
+            //     setChanged('success')
+            //     setTimeout(() => {
+            //         setChanged('')
+            //         navigate('/login')
+            //     }, 2000)
+            // } catch (error) {
+            //     console.error('Error:', error);
+
+            //     setChanged('error')
+            //     setTimeout(() => {
+            //         setChanged('')
+            //     }, 1500)
+            // }
         }
     }
 
