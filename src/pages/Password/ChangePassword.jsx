@@ -245,7 +245,7 @@ const ChangePassword = ({ company }) => {
                                 </Typography>
                                 <Typography level="body-sm">
                                     Return to {' '}
-                                    <RedirectLink path='login' label='Sign in!' />
+                                    <RedirectLink path='../login' label='Sign in!' />
                                 </Typography>
                             </Stack>
                         </Stack>
