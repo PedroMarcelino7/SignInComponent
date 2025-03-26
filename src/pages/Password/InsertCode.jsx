@@ -88,7 +88,9 @@ const InsertCode = ({ company }) => {
         formData.append("Email", email)
 
         const code = generateValidationToken()
-        formData.append("Validation Code", currentCode)
+        setCurrentCode(code)
+        console.log('CODE:', code)
+        formData.append("Validation Code", code)
 
 
         const object = Object.fromEntries(formData);
@@ -120,7 +122,7 @@ const InsertCode = ({ company }) => {
             code.push(random)
         }
 
-        setCurrentCode(code.join(''))
+        return code.join('')
     }
 
     const [codeSent, setCodeSent] = React.useState('')
