@@ -2,6 +2,9 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
+
+
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 
@@ -30,6 +33,7 @@ import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 //-- SUPABASE
 import { createClient } from "@supabase/supabase-js";
+import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
 
 const supabaseURL = import.meta.env.VITE_SUPABASE_URL
 const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
@@ -287,34 +291,25 @@ const Login = ({ company }) => {
                                     handleSubmit()
                                 }}
                             >
-                                <FormControl required>
-                                    <FormLabel>Email</FormLabel>
-                                    <Input
-                                        type="email"
-                                        name="email"
-                                        autoComplete='email'
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </FormControl>
-                                <FormControl required>
-                                    <FormLabel>Password</FormLabel>
-                                    <Input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="password"
-                                        autoComplete='new-password'
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        endDecorator={
-                                            <IconButton
-                                                onClick={handleClickShowPassword}
-                                                tabIndex={-1}
-                                            >
-                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        }
-                                    />
-                                </FormControl>
+                                <LabeledInput
+                                    label='E-mail'
+                                    type="email"
+                                    name="email"
+                                    autoComplete="email"
+                                    value={email}
+                                    onchange={setEmail}
+                                />
+
+                                <PasswordInput
+                                    label="Password"
+                                    name="password"
+                                    complete="new-password"
+                                    value={password}
+                                    onchange={setPassword}
+                                    onclick={handleClickShowPassword}
+                                    showpassword={showPassword}
+                                />
+
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Box
                                         sx={{

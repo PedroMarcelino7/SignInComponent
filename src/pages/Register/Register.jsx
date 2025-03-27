@@ -32,6 +32,7 @@ import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 //-- SUPABASE
 import { createClient } from "@supabase/supabase-js";
+import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
 
 const supabaseURL = import.meta.env.VITE_SUPABASE_URL
 const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
@@ -376,26 +377,24 @@ const Register = ({ company }) => {
                                     handleSubmit(data)
                                 }}
                             >
-                                <FormControl required>
-                                    <FormLabel>Name</FormLabel>
-                                    <Input
-                                        type="text"
-                                        name="name"
-                                        autoComplete='name'
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
-                                </FormControl>
-                                <FormControl required>
-                                    <FormLabel>Email</FormLabel>
-                                    <Input
-                                        type="email"
-                                        name="email"
-                                        autoComplete='email'
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </FormControl>
+                                <LabeledInput
+                                    label="Name"
+                                    type="text"
+                                    name="name"
+                                    complete="name"
+                                    value={name}
+                                    onchange={setName}
+                                />
+
+                                <LabeledInput
+                                    label="E-mail"
+                                    type="email"
+                                    name="email"
+                                    complete="email"
+                                    value={email}
+                                    onchange={setEmail}
+                                />
+
                                 <FormControl required>
                                     <FormLabel>Password</FormLabel>
                                     <Input
@@ -413,6 +412,7 @@ const Register = ({ company }) => {
                                             </IconButton>
                                         }
                                     />
+
                                     {passwordWeakness > 0 && (
                                         <Typography
                                             color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
