@@ -111,7 +111,7 @@ const Login = ({ company }) => {
     const handleSubmit = async () => {
         console.log(email, password)
 
-        const { data, error } = await supabase.from('Users').select("*").eq('user_email', email).single()
+        const { data, error } = await supabase.from('Users').select("*").eq('user_email', email).eq('user_isActive', true).single()
 
         if (error) {
             console.log("Error:", error)
