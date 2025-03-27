@@ -22,6 +22,15 @@ import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 
 import RedirectLink from '../../components/Link/RedirectLink';
 
+//-- SUPABASE
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseURL = import.meta.env.VITE_SUPABASE_URL
+const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
+
+const supabase = createClient(supabaseURL, supabaseKEY);
+//-- SUPABASE
+
 function ColorSchemeToggle(props) {
   const { onClick, ...other } = props;
   const { mode, setMode } = useColorScheme();
@@ -58,6 +67,7 @@ const Password = ({ company }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+
     const formData = new FormData(event.target);
 
     formData.append("access_key", accessKey);
@@ -67,20 +77,27 @@ const Password = ({ company }) => {
 
     const email = formData.get('email');
 
-    const object = Object.fromEntries(formData);
-    const json = JSON.stringify(object);
+    const { data, error } = await supabase.from("Users").select("*").eq('user_email', email).eq('user_isActive', true).single()
 
-    const res = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: json
-    }).then((res) => res.json());
+    if (error) {
+      console.log('Error', error)
+      return
+    } else {
+      const object = Object.fromEntries(formData);
+      const json = JSON.stringify(object);
 
-    if (res.success) {
-      navigate('/password/insertcode', { state: { code, email } })
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: json
+      }).then((res) => res.json());
+
+      if (res.success) {
+        navigate('/password/insertcode', { state: { code, email } })
+      }
     }
   };
 
