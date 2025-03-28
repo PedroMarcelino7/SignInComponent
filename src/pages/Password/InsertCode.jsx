@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+
+import CodeInput from '../../components/Input/CodeInput/CodeInput';
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -16,7 +17,6 @@ import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import InsertCodeInput from '../../components/Input/InsertCodeInput';
 import Alert from '@mui/joy/Alert';
 
 import RedirectLink from '../../components/Link/RedirectLink';
@@ -219,7 +219,7 @@ const InsertCode = ({ company }) => {
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Stack direction="row" spacing={2} display="flex" justifyContent="center" alignItems="center">
                                         {Array(5).fill(0).map((_, index) => (
-                                            <InsertCodeInput
+                                            <CodeInput
                                                 key={index}
                                                 index={index}
                                                 name={`input-${index}`}

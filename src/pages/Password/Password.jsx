@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import LabeledInput from '../../components/Input/LabeledInput/LabeledInput'
 
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -59,6 +60,8 @@ function ColorSchemeToggle(props) {
 const Password = ({ company }) => {
   const navigate = useNavigate();
 
+  const [email, setEmail] = useState('')
+
   const accessKey = import.meta.env.VITE_EMAIL_ACCESS_KEY;
 
   useEffect(() => {
@@ -74,8 +77,6 @@ const Password = ({ company }) => {
 
     const code = generateValidationToken()
     formData.append("Validation Code", code)
-
-    const email = formData.get('email');
 
     const { data, error } = await supabase.from("Users").select("*").eq('user_email', email).eq('user_isActive', true).single()
 
@@ -201,14 +202,15 @@ const Password = ({ company }) => {
             </Stack>
             <Stack gap={4} sx={{ mt: 2 }}>
               <form onSubmit={onSubmit}>
-                <FormControl required>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    type="email"
-                    name="email"
-                    autoComplete='email'
-                  />
-                </FormControl>
+                <LabeledInput
+                  label="E-mail"
+                  type="email"
+                  name="email"
+                  complete="email"
+                  value={email}
+                  onchange={setEmail}
+                />
+
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Button type="submit" fullWidth>
                     Submit email

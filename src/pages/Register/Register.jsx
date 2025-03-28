@@ -33,6 +33,7 @@ import GoogleIcon from '../../assets/Icons/GoogleIcon';
 //-- SUPABASE
 import { createClient } from "@supabase/supabase-js";
 import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
+import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
 
 const supabaseURL = import.meta.env.VITE_SUPABASE_URL
 const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
@@ -395,51 +396,34 @@ const Register = ({ company }) => {
                                     onchange={setEmail}
                                 />
 
-                                <FormControl required>
-                                    <FormLabel>Password</FormLabel>
-                                    <Input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="password"
-                                        autoComplete='new-password'
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        endDecorator={
-                                            <IconButton
-                                                onClick={handleClickShowPassword}
-                                                tabIndex={-1}
-                                            >
-                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        }
-                                    />
+                                <PasswordInput
+                                    label="Password"
+                                    name="password"
+                                    complete="new-password"
+                                    value={password}
+                                    onchange={setPassword}
+                                    showpassword={showPassword}
+                                    onclick={handleClickShowPassword}
+                                />
+                                {passwordWeakness > 0 && (
+                                    <Typography
+                                        color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
+                                    >
+                                        {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
+                                    </Typography>
+                                )}
 
-                                    {passwordWeakness > 0 && (
-                                        <Typography
-                                            color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
-                                        >
-                                            {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
-                                        </Typography>
-                                    )}
-                                </FormControl>
-                                <FormControl required>
-                                    <FormLabel>Confirm Password</FormLabel>
-                                    <Input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="passwordConfirm"
-                                        autoComplete='new-password'
-                                        value={passwordConfirm}
-                                        onChange={(e) => setPasswordConfirm(e.target.value)}
-                                        endDecorator={
-                                            <IconButton
-                                                onClick={handleClickShowPassword}
-                                                tabIndex={-1}
-                                            >
-                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        }
-                                    />
-                                    {!matchingPassword && <Typography>Password must match.</Typography>}
-                                </FormControl>
+                                <PasswordInput
+                                    label="Confirm Password"
+                                    name="passwordConfirm"
+                                    complete="new-password"
+                                    value={passwordConfirm}
+                                    onchange={setPasswordConfirm}
+                                    showpassword={showPassword}
+                                    onclick={handleClickShowPassword}
+                                />
+                                {!matchingPassword && <Typography>Password must match.</Typography>}
+
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Button type="submit" fullWidth>
                                         Sign up

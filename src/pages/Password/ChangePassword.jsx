@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+
+import LabeledInput from '../../components/Input/LabeledInput/LabeledInput'
 
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -114,7 +115,7 @@ const ChangePassword = ({ company }) => {
                 console.log('Error:', error)
 
                 setChanged('error')
-                
+
                 setTimeout(() => {
                     setChanged('')
                 }, 1500)
@@ -260,32 +261,31 @@ const ChangePassword = ({ company }) => {
 
                                 handleSubmit(data)
                             }}>
-                                <FormControl required>
-                                    <FormLabel>New Password</FormLabel>
-                                    <Input
-                                        type="text"
-                                        name="password"
-                                        autoComplete='password'
-                                        onChange={(e) => passwordValidation(e.target.value)}
-                                    />
-                                    {passwordWeakness > 0 && (
-                                        <Typography
-                                            color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
-                                        >
-                                            {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
-                                        </Typography>
-                                    )}
-                                </FormControl>
-                                <FormControl required>
-                                    <FormLabel>Confirm Password</FormLabel>
-                                    <Input
-                                        type="text"
-                                        name="confirmPassword"
-                                        autoComplete='password'
-                                        onChange={(e) => handleMatchingPassword(e.target.value)}
-                                    />
-                                    {!matchingPassword && <Typography>Password must match.</Typography>}
-                                </FormControl>
+                                <LabeledInput
+                                    label="New Password"
+                                    type="text"
+                                    name="password"
+                                    complete="new-password"
+                                    value={password}
+                                    onchange={passwordValidation}
+                                />
+                                {passwordWeakness > 0 && (
+                                    <Typography
+                                        color={passwordWeakness < 20 ? 'danger' : (passwordWeakness < 50 ? 'warning' : 'success')}
+                                    >
+                                        {passwordWeakness < 20 ? 'Weak Password.' : (passwordWeakness < 50 ? 'Medium Password.' : 'Strong Password.')}
+                                    </Typography>
+                                )}
+
+                                <LabeledInput
+                                    label="Confirm Password"
+                                    type="text"
+                                    name="confirmPassword"
+                                    complete="new-password"
+                                    onchange={handleMatchingPassword}
+                                />
+                                {!matchingPassword && <Typography>Password must match.</Typography>}
+
                                 <Stack gap={4} sx={{ mt: 2 }}>
                                     <Button type="submit" fullWidth>
                                         Change password
