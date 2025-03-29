@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 // Ui components
 import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
 import RedirectLink from '../../components/Link/RedirectLink'
+import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
+import BasicModal from '../../components/Modal/Modal';
 
 // Libs
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +35,6 @@ import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 //-- SUPABASE
 import { createClient } from "@supabase/supabase-js";
-import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
 
 const supabaseURL = import.meta.env.VITE_SUPABASE_URL
 const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
@@ -80,6 +81,7 @@ const Login = ({ company }) => {
     const [password, setPassword] = useState('')
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showModal, setShowModal] = useState(true)
     //-- Variables
 
 
@@ -98,6 +100,8 @@ const Login = ({ company }) => {
 
     //-- Functions
     const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleCloseModal = () => setShowModal(false)
 
     const generateToken = (data) => {
         if (data.user_password === password) {
@@ -133,8 +137,9 @@ const Login = ({ company }) => {
             const token = generateToken(data)
 
             if (token) {
-                toast.success("Login successful!");
-                navigate('/');
+                // toast.success("Login successful!");
+
+                setShowModal(true)
             } else {
                 toast.error("Invalid user!");
             }
@@ -374,6 +379,8 @@ const Login = ({ company }) => {
                     },
                 })}
             />
+
+            {showModal && <BasicModal onClose={handleCloseModal} />}
         </CssVarsProvider>
     )
 }
