@@ -1,34 +1,35 @@
+// React
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
+// Ui components
+import RedirectLink from '../../components/Link/RedirectLink';
+
+
+// Libs
+import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 
+// Styles
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
 import IconButton from '@mui/joy/IconButton';
-// import Link from '@mui/joy/Link';
-import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import Alert from '@mui/joy/Alert';
 
-import RedirectLink from '../../components/Link/RedirectLink';
-
+// Icons
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
+
 
 //-- SUPABASE
 import { createClient } from "@supabase/supabase-js";
@@ -41,6 +42,9 @@ const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
 const supabase = createClient(supabaseURL, supabaseKEY);
 //-- SUPABASE
 
+
+
+//-- Color Scheme Toggle
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
     const { mode, setMode } = useColorScheme();
@@ -64,23 +68,86 @@ function ColorSchemeToggle(props) {
         </IconButton>
     );
 }
+//-- Color Scheme Toggle
 
+
+
+//-----
 const Register = ({ company }) => {
+    //-- Variables
+    const navigate = useNavigate();
+
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [passwordConfirm, setPasswordConfirm] = useState("")
 
     const [matchingPassword, setMatchingPassword] = useState(true)
+    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
 
+    const [registered, setRegistered] = useState('')
+
+    const [showPassword, setShowPassword] = React.useState(false);
+    //-- Variables
+
+
+
+    //-- Use Effects
     useEffect(() => {
         document.title = `Register - ${company}`;
     }, []);
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        passwordValidation()
+    }, [password])
 
-    const [registered, setRegistered] = useState('')
+    useEffect(() => {
+        handleMatchingPassword()
+    }, [passwordConfirm])
+    //-- Use Effects
 
+
+
+    //-- Functions
+    const handleClickShowPassword = () => {
+        setShowPassword((show) => !show)
+    }
+
+    const handleMatchingPassword = () => {
+        passwordConfirm === password ? setMatchingPassword(true) : setMatchingPassword(false)
+    }
+
+    const passwordValidation = () => {
+        let weakness = 0;
+
+        if (password.length >= 16) {
+            weakness += 15;
+        }
+
+        if (/[!@#$%&*(){}\[\]/|:;,.+\-]/.test(password)) {
+            weakness += 15;
+        }
+
+        if (/[0-9]/.test(password)) {
+            weakness += 10;
+        }
+
+        if (/[A-Z]/.test(password)) {
+            weakness += 5;
+        }
+
+        if (/[a-z]/.test(password)) {
+            weakness += 5;
+        }
+
+        setPasswordWeakness(weakness);
+        setPassword(password)
+    };
+    //-- Functions
+
+
+
+    //-- Register
     const handleSubmit = async () => {
         if (!email) {
             alert('Invalid email');
@@ -108,16 +175,22 @@ const Register = ({ company }) => {
             user_password: password
         }
 
-        const { data, error } = await supabase.from("Users").insert([newUser]).single()
+        const { data, error } = await supabase
+            .from("Users")
+            .insert([newUser])
+            .single()
 
         if (error) {
             console.log("Error:", error)
+
+            toast.error('Error trying to register user!')
         } else {
             setName("")
             setEmail("")
             setPassword("")
             setPasswordConfirm("")
 
+            toast.success('Successfully registered!')
             navigate('/')
         }
 
@@ -156,7 +229,11 @@ const Register = ({ company }) => {
         //     }, 1500)
         // }
     }
+    //-- Register
 
+
+
+    //-- Google Register
     const registerWithGoogle = async (credential) => {
         const email = credential.email
 
@@ -193,50 +270,7 @@ const Register = ({ company }) => {
             }, 5000)
         }
     }
-
-    const [showPassword, setShowPassword] = React.useState(false);
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
-
-    const passwordValidation = () => {
-        let weakness = 0;
-
-        if (password.length >= 16) {
-            weakness += 15;
-        }
-
-        if (/[!@#$%&*(){}\[\]/|:;,.+\-]/.test(password)) {
-            weakness += 15;
-        }
-
-        if (/[0-9]/.test(password)) {
-            weakness += 10;
-        }
-
-        if (/[A-Z]/.test(password)) {
-            weakness += 5;
-        }
-
-        if (/[a-z]/.test(password)) {
-            weakness += 5;
-        }
-
-        setPasswordWeakness(weakness);
-        setPassword(password)
-    };
-
-    const handleMatchingPassword = () => {
-        passwordConfirm === password ? setMatchingPassword(true) : setMatchingPassword(false)
-    }
-
-    useEffect(() => {
-        passwordValidation()
-    }, [password])
-
-    useEffect(() => {
-        handleMatchingPassword()
-    }, [passwordConfirm])
+    //-- Google Register
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>

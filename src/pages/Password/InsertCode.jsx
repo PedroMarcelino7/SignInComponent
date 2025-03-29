@@ -1,26 +1,32 @@
+// React
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
+// Ui components
 import CodeInput from '../../components/Input/CodeInput/CodeInput';
+import RedirectLink from '../../components/Link/RedirectLink';
 
+// Libs
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+
+// Styles
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
-// import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
+import Alert from '@mui/joy/Alert';
+
+// Icons
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import Alert from '@mui/joy/Alert';
 
-import RedirectLink from '../../components/Link/RedirectLink';
 
+//-- Color Scheme Toggle
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
     const { mode, setMode } = useColorScheme();
@@ -44,26 +50,40 @@ function ColorSchemeToggle(props) {
         </IconButton>
     );
 }
+//-- Color Scheme Toggle
 
 
+
+//-----
 const InsertCode = ({ company }) => {
+    //-- Variables
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const accessKey = import.meta.env.VITE_EMAIL_ACCESS_KEY;
+
+    const { code, email } = location.state || {};
+
+    const [currentCode, setCurrentCode] = useState(code)
+    const [validationCode, setValidationCode] = useState(Array(5))
+    const [codeSent, setCodeSent] = useState('')
+    //-- Variables
+
+
+
+    //-- Use Effects
     useEffect(() => {
         document.title = `Change Password - ${company}`;
     }, [company]);
 
+    useEffect(() => {
+        validateCode();
+    }, [validationCode]);
+    //-- Use Effects
 
-    const navigate = useNavigate();
 
-    const accessKey = import.meta.env.VITE_EMAIL_ACCESS_KEY;
 
-    const location = useLocation();
-    const { code, email } = location.state || {};
-    const [currentCode, setCurrentCode] = React.useState(code)
-
-    console.log(currentCode, email)
-
-    const [validationCode, setValidationCode] = React.useState(Array(5))
-
+    //-- Functions
     const handleInputChange = (index, value) => {
         const newValidationCode = [...validationCode];
         newValidationCode[index] = value;
@@ -72,13 +92,10 @@ const InsertCode = ({ company }) => {
 
     const validateCode = () => {
         if (JSON.stringify(validationCode) === JSON.stringify(currentCode.split(''))) {
+            toast.success('Code validated!')
             navigate('/password/changepassword', { state: { email } })
         }
     };
-
-    useEffect(() => {
-        validateCode();
-    }, [validationCode]);
 
     const resendCode = async () => {
         const formData = new FormData();
@@ -106,10 +123,7 @@ const InsertCode = ({ company }) => {
         }).then((res) => res.json());
 
         if (res.success) {
-            setCodeSent('success')
-            setTimeout(() => {
-                setCodeSent('')
-            }, 5000)
+            toast.success('Code resent successfully!')
         }
     }
 
@@ -124,8 +138,7 @@ const InsertCode = ({ company }) => {
 
         return code.join('')
     }
-
-    const [codeSent, setCodeSent] = React.useState('')
+    //-- Functions
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>

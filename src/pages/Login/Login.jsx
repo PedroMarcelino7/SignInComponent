@@ -126,15 +126,17 @@ const Login = ({ company }) => {
 
         if (error) {
             console.log("Error:", error)
+
+            toast.error("Invalid user!");
             return
         } else {
             const token = generateToken(data)
 
             if (token) {
-                toast.success("Login realizado com sucesso!");
+                toast.success("Login successful!");
                 navigate('/');
             } else {
-                toast.error("Usuário inválido!");
+                toast.error("Invalid user!");
             }
         }
     }

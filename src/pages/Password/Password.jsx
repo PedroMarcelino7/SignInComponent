@@ -1,27 +1,30 @@
+// React
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+// Ui components
 import LabeledInput from '../../components/Input/LabeledInput/LabeledInput'
+import RedirectLink from '../../components/Link/RedirectLink';
 
+// Libs
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
+// Styles
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
 import IconButton from '@mui/joy/IconButton';
-// import Link from '@mui/joy/Link';
-import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
+
+// Icons
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 
-import RedirectLink from '../../components/Link/RedirectLink';
 
 //-- SUPABASE
 import { createClient } from "@supabase/supabase-js";
@@ -32,6 +35,9 @@ const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
 const supabase = createClient(supabaseURL, supabaseKEY);
 //-- SUPABASE
 
+
+
+//-- Color Scheme Toggle
 function ColorSchemeToggle(props) {
   const { onClick, ...other } = props;
   const { mode, setMode } = useColorScheme();
@@ -55,19 +61,31 @@ function ColorSchemeToggle(props) {
     </IconButton>
   );
 }
+//-- Color Scheme Toggle
 
 
+
+//-----
 const Password = ({ company }) => {
+  //-- Variables
   const navigate = useNavigate();
-
-  const [email, setEmail] = useState('')
 
   const accessKey = import.meta.env.VITE_EMAIL_ACCESS_KEY;
 
+  const [email, setEmail] = useState('')
+  //-- Variables
+
+
+
+  //-- Use Effects
   useEffect(() => {
     document.title = `Change Password - ${company}`;
   }, [company]);
+  //-- Use Effects
 
+
+
+  //-- Submit Email
   const onSubmit = async (event) => {
     event.preventDefault();
 
@@ -78,10 +96,17 @@ const Password = ({ company }) => {
     const code = generateValidationToken()
     formData.append("Validation Code", code)
 
-    const { data, error } = await supabase.from("Users").select("*").eq('user_email', email).eq('user_isActive', true).single()
+    const { data, error } = await supabase
+      .from("Users")
+      .select("*")
+      .eq('user_email', email)
+      .eq('user_isActive', true)
+      .single()
 
     if (error) {
       console.log('Error', error)
+
+      toast.error('Invalid e-mail!')
       return
     } else {
       const object = Object.fromEntries(formData);
@@ -97,11 +122,16 @@ const Password = ({ company }) => {
       }).then((res) => res.json());
 
       if (res.success) {
+        toast.success('A code has been sent to your email')
         navigate('/password/insertcode', { state: { code, email } })
       }
     }
   };
+  //-- Submit Email
 
+
+
+  //-- Functions
   const generateValidationToken = () => {
     const code = []
 
@@ -113,6 +143,7 @@ const Password = ({ company }) => {
 
     return code.join('')
   }
+  //-- Functions
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
