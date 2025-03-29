@@ -1,30 +1,26 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import App from "./App.jsx";
+import "./index.css";
+
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+import { CssVarsProvider } from "@mui/joy";
+
+import Toast from "./components/Toast/Toast.jsx";
 
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="279059219026-j5vltgtijlfgvm4v1qelqjrg4jh2f2qu.apps.googleusercontent.com">
-      <App />
+    <CssVarsProvider>
+      <GoogleOAuthProvider clientId="279059219026-j5vltgtijlfgvm4v1qelqjrg4jh2f2qu.apps.googleusercontent.com">
+        
+        <App />
 
-      <ToastContainer
-        position="top-left"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick={true}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-    </GoogleOAuthProvider>
-  </React.StrictMode>,
-)
+        <Toast />
+        
+      </GoogleOAuthProvider>
+    </CssVarsProvider>
+  </React.StrictMode>
+);
