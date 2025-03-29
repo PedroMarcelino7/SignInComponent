@@ -13,7 +13,7 @@ import Modal from '@mui/joy/Modal';
 // Icons
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function BasicModal({ onClose }) {
+export default function BasicModal({ user, onClose }) {
     //-- Variables
     const { mode } = useColorScheme();
     //-- Variables
@@ -52,9 +52,11 @@ export default function BasicModal({ onClose }) {
                     flexDirection: 'column',
                     gap: '0.75rem'
                 }}>
-                    <IconedCard
-                        type={'admin'}
-                    />
+                    {user.user_access === 0 &&
+                        <IconedCard
+                            type={'admin'}
+                        />
+                    }
 
                     <IconedCard
                         type={'kanban'}

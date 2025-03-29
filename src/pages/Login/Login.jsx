@@ -77,6 +77,8 @@ const Login = ({ company }) => {
     //-- Variables
     const navigate = useNavigate();
 
+    const [user, setUser] = useState({})
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -137,6 +139,7 @@ const Login = ({ company }) => {
             const token = generateToken(data)
 
             if (token) {
+                setUser(data)
                 setShowModal(true)
             } else {
                 toast.error("Invalid user!");
@@ -378,7 +381,7 @@ const Login = ({ company }) => {
                 })}
             />
 
-            {showModal && <BasicModal onClose={handleCloseModal} />}
+            {showModal && <BasicModal user={user} onClose={handleCloseModal} />}
         </CssVarsProvider>
     )
 }
