@@ -1,13 +1,18 @@
+// React
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+// Ui components
 import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
+import RedirectLink from '../../components/Link/RedirectLink'
 
-
+// Libs
+import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
+// Styles
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -15,21 +20,16 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Checkbox from '@mui/joy/Checkbox';
 import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
 import IconButton from '@mui/joy/IconButton';
-import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
+
+// Icons
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-
-import RedirectLink from '../../components/Link/RedirectLink'
-
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
+
 
 //-- SUPABASE
 import { createClient } from "@supabase/supabase-js";
@@ -103,33 +103,46 @@ const Login = ({ company }) => {
         if (data.user_password === password) {
             const token = (`${data.user_id}-${import.meta.env.VITE_AUTH_TOKEN}`);
             localStorage.setItem('token', token)
+            return token
         } else {
             console.log("Password don't match")
+            return
         }
     }
     //-- Functions
 
 
 
-    //-- Handle Submit
+    //-- Login
     const handleSubmit = async () => {
         console.log(email, password)
 
-        const { data, error } = await supabase.from('Users').select("*").eq('user_email', email).eq('user_isActive', true).single()
+        const { data, error } = await supabase
+            .from('Users')
+            .select("*")
+            .eq('user_email', email)
+            .eq('user_isActive', true)
+            .single()
 
         if (error) {
             console.log("Error:", error)
             return
         } else {
-            generateToken(data)
+            const token = generateToken(data)
+
+            if (token) {
+                toast.success("Login realizado com sucesso!");
+                navigate('/');
+            } else {
+                toast.error("Usuário inválido!");
+            }
         }
-
-        navigate('/');
     }
-    //-- Handle Submit
+    //-- Login
 
 
 
+    //-- Google Login
     const loginWithGoogle = async (credential) => {
         const email = credential.email
 
@@ -157,6 +170,7 @@ const Login = ({ company }) => {
             console.error('Error:', error);
         }
     }
+    //-- Google Login
 
     return (
         <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
