@@ -1,15 +1,32 @@
+// React
 import * as React from 'react';
+
+// Libs
+import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+
+// Styles
+import { useColorScheme } from '@mui/joy';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
 import Modal from '@mui/joy/Modal';
-import { useColorScheme } from '@mui/joy';
+
+// Icons
 import CloseIcon from '@mui/icons-material/Close';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 
 export default function BasicModal({ onClose }) {
+    //-- Variables
     const { mode } = useColorScheme();
+
+    const navigate = useNavigate();
+    //-- Variables
+
+    const navigateTo = (path) => {
+        toast.success("Login successful!")
+        navigate(path)
+    }
 
     return (
         <Modal open={true}>
@@ -45,16 +62,17 @@ export default function BasicModal({ onClose }) {
                     flexDirection: 'column',
                     gap: '0.75rem'
                 }}>
-                    <Box sx={{
-                        backgroundColor: '#171A1C',
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.5rem',
-                        borderRadius: '5px',
-                        cursor: 'pointer'
-                    }}>
+                    <Box onClick={() => navigateTo('/')}
+                        sx={{
+                            backgroundColor: '#171A1C',
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.5rem',
+                            borderRadius: '5px',
+                            cursor: 'pointer'
+                        }}>
                         <AdminPanelSettingsIcon />
 
                         <Typography>
@@ -62,16 +80,17 @@ export default function BasicModal({ onClose }) {
                         </Typography>
                     </Box>
 
-                    <Box sx={{
-                        backgroundColor: '#171A1C',
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.5rem',
-                        borderRadius: '5px',
-                        cursor: 'pointer'
-                    }}>
+                    <Box onClick={() => navigateTo('/')}
+                        sx={{
+                            backgroundColor: '#171A1C',
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.5rem',
+                            borderRadius: '5px',
+                            cursor: 'pointer'
+                        }}>
                         <ViewKanbanIcon />
 
                         <Typography>

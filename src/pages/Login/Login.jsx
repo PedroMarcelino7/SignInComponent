@@ -81,7 +81,7 @@ const Login = ({ company }) => {
     const [password, setPassword] = useState('')
 
     const [showPassword, setShowPassword] = useState(false);
-    const [showModal, setShowModal] = useState(true)
+    const [showModal, setShowModal] = useState(false)
     //-- Variables
 
 
@@ -137,8 +137,6 @@ const Login = ({ company }) => {
             const token = generateToken(data)
 
             if (token) {
-                // toast.success("Login successful!");
-
                 setShowModal(true)
             } else {
                 toast.error("Invalid user!");
