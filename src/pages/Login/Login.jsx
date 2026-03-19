@@ -8,12 +8,6 @@ import RedirectLink from '../../components/Link/RedirectLink'
 import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
 import BasicModal from '../../components/Modal/Modal';
 
-// Libs
-import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";
-import { toast } from "react-toastify";
-
 // Styles
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
@@ -32,16 +26,9 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
-
-//-- SUPABASE
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL
-const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
-
-const supabase = createClient(supabaseURL, supabaseKEY);
-//-- SUPABASE
-
+// Firebase
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../../firebaseConfig';
 
 
 //-- Color Scheme Toggle
@@ -75,10 +62,6 @@ function ColorSchemeToggle(props) {
 //-----
 const Login = ({ company }) => {
     //-- Variables
-    const navigate = useNavigate();
-
-    const [user, setUser] = useState({})
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -104,78 +87,20 @@ const Login = ({ company }) => {
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const handleCloseModal = () => setShowModal(false)
-
-    const generateToken = (data) => {
-        if (data.user_password === password) {
-            const token = (`${data.user_id}-${import.meta.env.VITE_AUTH_TOKEN}`);
-            localStorage.setItem('token', token)
-            return token
-        } else {
-            console.log("Password don't match")
-            return
-        }
-    }
     //-- Functions
 
 
 
-    //-- Login
-    const handleSubmit = async () => {
-        console.log(email, password)
-
-        const { data, error } = await supabase
-            .from('Users')
-            .select("*")
-            .eq('user_email', email)
-            .eq('user_isActive', true)
-            .single()
-
-        if (error) {
-            console.log("Error:", error)
-
-            toast.error("Invalid user!");
-            return
-        } else {
-            const token = generateToken(data)
-
-            if (token) {
-                setUser(data)
-                setShowModal(true)
-            } else {
-                toast.error("Invalid user!");
-            }
-        }
-    }
-    //-- Login
-
-
-
     //-- Google Login
-    const loginWithGoogle = async (credential) => {
-        const email = credential.email
+    const loginGoogle = async () => {
+        const provider = new GoogleAuthProvider()
 
         try {
-            const response = await fetch('http://localhost:3002/users/googleauth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userEmail: email
-                }),
-            });
+            const result = await signInWithPopup(auth, provider)
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-
-            localStorage.setItem('authToken', result.token);
-
-            navigate('/');
+            console.log("Usuário logado:", result.user)
         } catch (error) {
-            console.error('Error:', error);
+            console.error("Erro ao logar:", error)
         }
     }
     //-- Google Login
@@ -270,30 +195,9 @@ const Login = ({ company }) => {
                                 color="neutral"
                                 fullWidth
                                 startDecorator={<GoogleIcon />}
+                                onClick={loginGoogle}
                             >
                                 Continue with Google
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        opacity: 0,
-                                        '& > div': { height: '100%' }
-                                    }}
-                                >
-                                    <GoogleLogin
-                                        onSuccess={(credentialResponse) => {
-                                            const decoded = jwtDecode(credentialResponse?.credential);
-                                            loginWithGoogle(decoded)
-                                            console.log(decoded);
-                                        }}
-                                        onError={() => {
-                                            console.log('Login Failed');
-                                        }}
-                                    />
-                                </Box>
                             </Button>
                         </Stack>
                         <Divider
@@ -381,7 +285,7 @@ const Login = ({ company }) => {
                 })}
             />
 
-            {showModal && <BasicModal user={user} onClose={handleCloseModal} />}
+            {showModal && <BasicModal onClose={handleCloseModal} />}
         </CssVarsProvider>
     )
 }

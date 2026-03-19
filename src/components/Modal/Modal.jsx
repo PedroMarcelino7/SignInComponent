@@ -1,6 +1,3 @@
-// React
-import * as React from 'react';
-
 // Ui components
 import IconedCard from '../Cards/IconedCard';
 
@@ -13,7 +10,7 @@ import Modal from '@mui/joy/Modal';
 // Icons
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function BasicModal({ user, onClose }) {
+export default function BasicModal({ onClose }) {
     //-- Variables
     const { mode } = useColorScheme();
     //-- Variables
@@ -52,12 +49,6 @@ export default function BasicModal({ user, onClose }) {
                     flexDirection: 'column',
                     gap: '0.75rem'
                 }}>
-                    {user.user_access === 0 &&
-                        <IconedCard
-                            type={'admin'}
-                        />
-                    }
-
                     <IconedCard
                         type={'kanban'}
                     />
@@ -66,4 +57,3 @@ export default function BasicModal({ user, onClose }) {
         </Modal>
     );
 }
-
