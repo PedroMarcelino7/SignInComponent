@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import RedirectLink from '../../components/Link/RedirectLink';
 import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
 import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
-
+import BasicModal from '../../components/Modal/Modal';
 
 // Libs
 import { useNavigate } from 'react-router-dom';
@@ -31,9 +31,8 @@ import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 // Firebase
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../../firebaseConfig';
-import BasicModal from '../../components/Modal/Modal';
+import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 
 
@@ -147,7 +146,22 @@ const Register = ({ company }) => {
 
     //-- Register
     const handleSubmit = async () => {
-        alert('submit.')
+        try {
+            let newUser = await createUserWithEmailAndPassword(auth, email, password)
+
+            await updateProfile(newUser.user, {
+                displayName: name
+            })
+
+            setUser(newUser.user)
+
+            console.log("Usuário criado:", newUser.user)
+            toast.success('User registered.')
+            navigate('/login')
+        } catch (err) {
+            console.log("Error:", err)
+            toast.error('Erro')
+        }
     }
     //-- Register
 
@@ -301,14 +315,15 @@ const Register = ({ company }) => {
                             <form
                                 onSubmit={(event) => {
                                     event.preventDefault();
-                                    const formElements = event.currentTarget.elements;
-                                    const data = {
-                                        email: formElements.email.value,
-                                        password: formElements.password.value,
-                                        passwordConfirm: formElements.passwordConfirm.value
-                                    };
 
-                                    handleSubmit(data)
+                                    // const formElements = event.currentTarget.elements;
+                                    // const data = {
+                                    //     email: formElements.email.value,
+                                    //     password: formElements.password.value,
+                                    //     passwordConfirm: formElements.passwordConfirm.value
+                                    // };
+
+                                    handleSubmit()
                                 }}
                             >
                                 <LabeledInput
