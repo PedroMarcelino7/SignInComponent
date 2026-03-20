@@ -62,6 +62,7 @@ function ColorSchemeToggle(props) {
 //-----
 const Login = ({ company }) => {
     //-- Variables
+    const [user, setUser] = useState(null)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -99,6 +100,8 @@ const Login = ({ company }) => {
             const result = await signInWithPopup(auth, provider)
 
             console.log("Usuário logado:", result.user)
+            setUser(result.user)
+            setShowModal(true)
         } catch (error) {
             console.error("Erro ao logar:", error)
         }
@@ -285,7 +288,7 @@ const Login = ({ company }) => {
                 })}
             />
 
-            {showModal && <BasicModal onClose={handleCloseModal} />}
+            {showModal && <BasicModal user={user} onClose={handleCloseModal} />}
         </CssVarsProvider>
     )
 }

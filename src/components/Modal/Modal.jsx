@@ -50,6 +50,12 @@ export default function BasicModal({ onClose }) {
                     gap: '0.75rem'
                 }}>
                     <IconedCard
+                        type={'todo'}
+                    />
+                    <IconedCard
+                        type={'finance'}
+                    />
+                    <IconedCard
                         type={'kanban'}
                     />
                 </Box>

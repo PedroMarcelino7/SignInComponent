@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 
 // Ui components
 import RedirectLink from '../../components/Link/RedirectLink';
+import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
+import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
 
 
 // Libs
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";
 
 // Styles
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
@@ -30,17 +30,10 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
-
-//-- SUPABASE
-import { createClient } from "@supabase/supabase-js";
-import LabeledInput from '../../components/Input/LabeledInput/LabeledInput';
-import PasswordInput from '../../components/Input/PasswordInput/PasswordInput';
-
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL
-const supabaseKEY = import.meta.env.VITE_SUPABASE_KEY
-
-const supabase = createClient(supabaseURL, supabaseKEY);
-//-- SUPABASE
+// Firebase
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../../firebaseConfig';
+import BasicModal from '../../components/Modal/Modal';
 
 
 
@@ -77,6 +70,7 @@ const Register = ({ company }) => {
     //-- Variables
     const navigate = useNavigate();
 
+    const [user, setUser] = useState(null)
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -88,6 +82,8 @@ const Register = ({ company }) => {
     const [registered, setRegistered] = useState('')
 
     const [showPassword, setShowPassword] = React.useState(false);
+
+    const [showModal, setShowModal] = useState(false)
     //-- Variables
 
 
@@ -109,6 +105,8 @@ const Register = ({ company }) => {
 
 
     //-- Functions
+    const handleCloseModal = () => setShowModal(false)
+
     const handleClickShowPassword = () => {
         setShowPassword((show) => !show)
     }
@@ -149,125 +147,25 @@ const Register = ({ company }) => {
 
     //-- Register
     const handleSubmit = async () => {
-        if (!email) {
-            alert('Invalid email');
-            return;
-        }
-
-        if (email.length < 10 || email.length > 255) {
-            alert('Email length should be between 10 and 255');
-            return;
-        }
-
-        if (!password || password == '') {
-            alert('Invalid password');
-            return;
-        }
-
-        if (password !== passwordConfirm) {
-            alert('Password must match');
-            return;
-        }
-
-        const newUser = {
-            user_name: name,
-            user_email: email,
-            user_password: password
-        }
-
-        const { data, error } = await supabase
-            .from("Users")
-            .insert([newUser])
-            .single()
-
-        if (error) {
-            console.log("Error:", error)
-
-            toast.error('Error trying to register user!')
-        } else {
-            setName("")
-            setEmail("")
-            setPassword("")
-            setPasswordConfirm("")
-
-            toast.success('Successfully registered!')
-            navigate('/')
-        }
-
-        // try {
-        //     const response = await fetch('http://localhost:3002/users/post', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({
-        //             userEmail: email,
-        //             userPassword: password,
-        //             userPasswordConfirm: passwordConfirm
-        //         }),
-        //     });
-
-        //     if (!response.ok) {
-        //         throw new Error(`Error: ${response.statusText}`);
-        //     }
-
-        //     const result = await response.json();
-
-        //     console.log('Success:', result);
-
-        //     setRegistered('success')
-        //     setTimeout(() => {
-        //         setRegistered('')
-        //         navigate('/login')
-        //     }, 2000)
-        // } catch (error) {
-        //     console.error('Error:', error);
-
-        //     setRegistered('error')
-        //     setTimeout(() => {
-        //         setRegistered('')
-        //     }, 1500)
-        // }
+        alert('submit.')
     }
     //-- Register
 
 
 
     //-- Google Register
-    const registerWithGoogle = async (credential) => {
-        const email = credential.email
+    const registerGoogle = async () => {
+        const provider = new GoogleAuthProvider()
 
         try {
-            const response = await fetch('http://localhost:3002/users/googleauth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userEmail: email
-                }),
-            });
+            const result = await signInWithPopup(auth, provider)
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-
-            localStorage.setItem('authToken', result.token);
-
-            setRegistered('success')
-            setTimeout(() => {
-                setRegistered('')
-                navigate('/')
-            }, 1500)
+            console.log("Usuário logado:", result.user)
+            setUser(result.user)
+            setShowModal(true)
+            toast.success("Successfully registered!");
         } catch (error) {
-            console.error('Error:', error);
-
-            setRegistered('error')
-            setTimeout(() => {
-                setRegistered('')
-            }, 5000)
+            console.error("Erro ao logar:", error)
         }
     }
     //-- Google Register
@@ -363,9 +261,10 @@ const Register = ({ company }) => {
                                 color="neutral"
                                 fullWidth
                                 startDecorator={<GoogleIcon />}
+                                onClick={registerGoogle}
                             >
                                 Continue with Google
-                                <Box
+                                {/* <Box
                                     sx={{
                                         position: 'absolute',
                                         top: 0,
@@ -386,7 +285,7 @@ const Register = ({ company }) => {
                                             console.log('Register Failed');
                                         }}
                                     />
-                                </Box>
+                                </Box> */}
                             </Button>
                         </Stack>
                         <Divider
@@ -496,6 +395,8 @@ const Register = ({ company }) => {
                     },
                 })}
             />
+
+            {showModal && <BasicModal user={user} onClose={handleCloseModal} />}
         </CssVarsProvider>
     )
 }

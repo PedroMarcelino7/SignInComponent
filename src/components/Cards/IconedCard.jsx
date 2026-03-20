@@ -12,6 +12,8 @@ import Typography from '@mui/joy/Typography';
 // Icons
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 const IconedCard = ({ type }) => {
     //-- Variables
@@ -29,6 +31,10 @@ const IconedCard = ({ type }) => {
                 return { icon: <AdminPanelSettingsIcon />, text: 'Administrative Panel', path: '/' };
             case 'kanban':
                 return { icon: <ViewKanbanIcon />, text: 'Kanban Task Management', path: '/' };
+            case 'todo':
+                return { icon: <FormatListBulletedIcon />, text: 'Web To Do List', path: '/' };
+            case 'finance':
+                return { icon: <AttachMoneyIcon />, text: 'Personal Finance', path: '/' };
             default:
                 return { icon: null, text: 'Unknown', path: '/' };
         }
