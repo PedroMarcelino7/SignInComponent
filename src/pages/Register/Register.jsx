@@ -1,5 +1,4 @@
 // React
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 // Ui components
@@ -22,7 +21,6 @@ import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
-import Alert from '@mui/joy/Alert';
 
 // Icons
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
@@ -31,8 +29,9 @@ import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
 // Firebase
-import { auth } from '../../../firebaseConfig';
+import { auth, db } from '../../../firebaseConfig';
 import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore'
 
 
 
@@ -40,7 +39,7 @@ import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, up
 function ColorSchemeToggle(props) {
     const { onClick, ...other } = props;
     const { mode, setMode } = useColorScheme();
-    const [mounted, setMounted] = React.useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => setMounted(true), []);
 
@@ -78,8 +77,6 @@ const Register = ({ company }) => {
     const [matchingPassword, setMatchingPassword] = useState(true)
     const [passwordWeakness, setPasswordWeakness] = useState(0)
 
-    const [showPassword, setShowPassword] = useState(false);
-
     const [showModal, setShowModal] = useState(false)
     //-- Variables
 
@@ -103,10 +100,6 @@ const Register = ({ company }) => {
 
     //-- Functions
     const handleCloseModal = () => setShowModal(false)
-
-    const handleClickShowPassword = () => {
-        setShowPassword((show) => !show)
-    }
 
     const handleMatchingPassword = () => {
         passwordConfirm === password ? setMatchingPassword(true) : setMatchingPassword(false)
@@ -149,9 +142,12 @@ const Register = ({ company }) => {
         try {
             let newUser = await createUserWithEmailAndPassword(auth, email, password)
 
-            await updateProfile(newUser.user, {
-                displayName: name
-            })
+            if (newUser) {
+                await setDoc(doc(db, "User", newUser.user.uid), {
+                    name: name,
+                    email: newUser.user.email,
+                })
+            }
 
             setUser(newUser.user)
 
@@ -166,6 +162,7 @@ const Register = ({ company }) => {
             } else if (err.code === 'auth/weak-password') {
                 toast.error('A senha deve ter pelo menos 6 caracteres.')
             } else {
+                console.log('Error:', err)
                 toast.error('Erro ao criar usuário.')
             }
         }
