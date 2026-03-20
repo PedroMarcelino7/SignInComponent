@@ -76,11 +76,9 @@ const Register = ({ company }) => {
     const [passwordConfirm, setPasswordConfirm] = useState("")
 
     const [matchingPassword, setMatchingPassword] = useState(true)
-    const [passwordWeakness, setPasswordWeakness] = React.useState(0)
+    const [passwordWeakness, setPasswordWeakness] = useState(0)
 
-    const [registered, setRegistered] = useState('')
-
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const [showModal, setShowModal] = useState(false)
     //-- Variables
@@ -98,7 +96,7 @@ const Register = ({ company }) => {
 
     useEffect(() => {
         handleMatchingPassword()
-    }, [passwordConfirm])
+    }, [password, passwordConfirm])
     //-- Use Effects
 
 
@@ -145,7 +143,9 @@ const Register = ({ company }) => {
 
 
     //-- Register
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
         try {
             let newUser = await createUserWithEmailAndPassword(auth, email, password)
 
@@ -159,8 +159,15 @@ const Register = ({ company }) => {
             toast.success('User registered.')
             navigate('/login')
         } catch (err) {
-            console.log("Error:", err)
-            toast.error('Erro')
+            if (err.code === 'auth/email-already-in-use') {
+                toast.error('Este e-mail já está em uso.')
+            } else if (err.code === 'auth/invalid-email') {
+                toast.error('E-mail inválido.')
+            } else if (err.code === 'auth/weak-password') {
+                toast.error('A senha deve ter pelo menos 6 caracteres.')
+            } else {
+                toast.error('Erro ao criar usuário.')
+            }
         }
     }
     //-- Register
@@ -259,7 +266,6 @@ const Register = ({ company }) => {
                             },
                         }}
                     >
-                        {registered == 'success' ? <Alert color="success">Successfully registered.</Alert> : (registered == 'error' && <Alert color="danger">User registration error.</Alert>)}
                         <Stack gap={4} sx={{ mb: 2 }}>
                             <Stack gap={1}>
                                 <Typography component="h1" level="h3">
@@ -278,28 +284,6 @@ const Register = ({ company }) => {
                                 onClick={registerGoogle}
                             >
                                 Continue with Google
-                                {/* <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        opacity: 0,
-                                        '& > div': { height: '100%' }
-                                    }}
-                                >
-                                    <GoogleLogin
-                                        onSuccess={(credentialResponse) => {
-                                            const decoded = jwtDecode(credentialResponse?.credential);
-                                            console.log(decoded);
-                                            registerWithGoogle(decoded)
-                                        }}
-                                        onError={() => {
-                                            console.log('Register Failed');
-                                        }}
-                                    />
-                                </Box> */}
                             </Button>
                         </Stack>
                         <Divider
@@ -313,18 +297,7 @@ const Register = ({ company }) => {
                         </Divider>
                         <Stack gap={4} sx={{ mt: 2 }}>
                             <form
-                                onSubmit={(event) => {
-                                    event.preventDefault();
-
-                                    // const formElements = event.currentTarget.elements;
-                                    // const data = {
-                                    //     email: formElements.email.value,
-                                    //     password: formElements.password.value,
-                                    //     passwordConfirm: formElements.passwordConfirm.value
-                                    // };
-
-                                    handleSubmit()
-                                }}
+                                onSubmit={(event) => handleSubmit(event)}
                             >
                                 <LabeledInput
                                     label="Name"
@@ -350,8 +323,6 @@ const Register = ({ company }) => {
                                     complete="new-password"
                                     value={password}
                                     onchange={setPassword}
-                                    showpassword={showPassword}
-                                    onclick={handleClickShowPassword}
                                 />
                                 {passwordWeakness > 0 && (
                                     <Typography
@@ -367,8 +338,6 @@ const Register = ({ company }) => {
                                     complete="new-password"
                                     value={passwordConfirm}
                                     onchange={setPasswordConfirm}
-                                    showpassword={showPassword}
-                                    onclick={handleClickShowPassword}
                                 />
                                 {!matchingPassword && <Typography>Password must match.</Typography>}
 

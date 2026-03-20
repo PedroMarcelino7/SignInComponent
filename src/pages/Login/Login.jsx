@@ -235,8 +235,6 @@ const Login = ({ company }) => {
                                     complete="new-password"
                                     value={password}
                                     onchange={setPassword}
-                                    onclick={handleClickShowPassword}
-                                    showpassword={showPassword}
                                 />
 
                                 <Stack gap={4} sx={{ mt: 2 }}>
