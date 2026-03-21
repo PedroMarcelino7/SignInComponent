@@ -26,9 +26,12 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from '../../assets/Icons/GoogleIcon';
 
+// Libs
+import { toast } from 'react-toastify';
+
 // Firebase
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../../firebaseConfig';
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 
 
 //-- Color Scheme Toggle
@@ -89,6 +92,24 @@ const Login = ({ company }) => {
 
     const handleCloseModal = () => setShowModal(false)
     //-- Functions
+
+
+
+    //-- Login
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, password)
+
+            console.log("Usuário logado:", result.user)
+            setShowModal(true)
+        } catch (err) {
+            console.log('Error:', err)
+            toast.error('Error.')
+        }
+    }
+    //-- Login
 
 
 
@@ -214,11 +235,7 @@ const Login = ({ company }) => {
                         </Divider>
                         <Stack gap={4} sx={{ mt: 2 }}>
                             <form
-                                onSubmit={(event) => {
-                                    event.preventDefault()
-
-                                    handleSubmit()
-                                }}
+                                onSubmit={(event) => handleSubmit(event)}
                             >
                                 <LabeledInput
                                     label='E-mail'
